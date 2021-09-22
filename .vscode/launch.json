@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-Concesionario2App<concesionario-2>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "console": "internalConsole",
+            "mainClass": "es.melit.concesionario2.Concesionario2App",
+            "projectName": "concesionario-2",
+            "args": ""
+        }
+    ]
+}

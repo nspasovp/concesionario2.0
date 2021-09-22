@@ -1,0 +1,160 @@
+<div class="row justify-content-center">
+  <div class="col-8">
+    <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+      <h2 id="jhi-venta-heading" data-cy="VentaCreateUpdateHeading" jhiTranslate="concesionario2App.venta.home.createOrEditLabel">
+        Create or edit a Venta
+      </h2>
+
+      <div>
+        <jhi-alert-error></jhi-alert-error>
+
+        <div class="form-group" [hidden]="editForm.get('id')!.value == null">
+          <label class="form-control-label" jhiTranslate="global.field.id" for="field_id">ID</label>
+          <input type="number" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id" [readonly]="true" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" jhiTranslate="concesionario2App.venta.fecha" for="field_fecha">Fecha</label>
+          <div class="input-group">
+            <input
+              id="field_fecha"
+              data-cy="fecha"
+              type="text"
+              class="form-control"
+              name="fecha"
+              ngbDatepicker
+              #fechaDp="ngbDatepicker"
+              formControlName="fecha"
+            />
+            <span class="input-group-append">
+              <button type="button" class="btn btn-secondary" (click)="fechaDp.toggle()"><fa-icon icon="calendar-alt"></fa-icon></button>
+            </span>
+          </div>
+          <div *ngIf="editForm.get('fecha')!.invalid && (editForm.get('fecha')!.dirty || editForm.get('fecha')!.touched)">
+            <small class="form-text text-danger" *ngIf="editForm.get('fecha')?.errors?.required" jhiTranslate="entity.validation.required">
+              This field is required.
+            </small>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" jhiTranslate="concesionario2App.venta.numeroCoches" for="field_numeroCoches"
+            >Numero Coches</label
+          >
+          <input
+            type="number"
+            class="form-control"
+            name="numeroCoches"
+            id="field_numeroCoches"
+            data-cy="numeroCoches"
+            formControlName="numeroCoches"
+          />
+          <div
+            *ngIf="editForm.get('numeroCoches')!.invalid && (editForm.get('numeroCoches')!.dirty || editForm.get('numeroCoches')!.touched)"
+          >
+            <small
+              class="form-text text-danger"
+              *ngIf="editForm.get('numeroCoches')?.errors?.required"
+              jhiTranslate="entity.validation.required"
+            >
+              This field is required.
+            </small>
+            <small
+              class="form-text text-danger"
+              *ngIf="editForm.get('numeroCoches')?.errors?.min"
+              jhiTranslate="entity.validation.min"
+              [translateValues]="{ min: 1 }"
+            >
+              This field should be at least 1.
+            </small>
+            <small
+              class="form-text text-danger"
+              [hidden]="!editForm.get('numeroCoches')?.errors?.number"
+              jhiTranslate="entity.validation.number"
+            >
+              This field should be a number.
+            </small>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" jhiTranslate="concesionario2App.venta.vendedor" for="field_vendedor">Vendedor</label>
+          <select class="form-control" id="field_vendedor" data-cy="vendedor" name="vendedor" formControlName="vendedor">
+            <option *ngIf="!editForm.get('vendedor')!.value" [ngValue]="null" selected></option>
+            <option
+              [ngValue]="vendedorOption.id === editForm.get('vendedor')!.value?.id ? editForm.get('vendedor')!.value : vendedorOption"
+              *ngFor="let vendedorOption of vendedorsSharedCollection; trackBy: trackVendedorById"
+            >
+              {{ vendedorOption.id }}
+            </option>
+          </select>
+        </div>
+        <div *ngIf="editForm.get(['vendedor'])!.invalid && (editForm.get(['vendedor'])!.dirty || editForm.get(['vendedor'])!.touched)">
+          <small
+            class="form-text text-danger"
+            *ngIf="editForm.get(['vendedor'])?.errors?.required"
+            jhiTranslate="entity.validation.required"
+          >
+            This field is required.
+          </small>
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" jhiTranslate="concesionario2App.venta.comprador" for="field_comprador">Comprador</label>
+          <select class="form-control" id="field_comprador" data-cy="comprador" name="comprador" formControlName="comprador">
+            <option *ngIf="!editForm.get('comprador')!.value" [ngValue]="null" selected></option>
+            <option
+              [ngValue]="compradorOption.id === editForm.get('comprador')!.value?.id ? editForm.get('comprador')!.value : compradorOption"
+              *ngFor="let compradorOption of compradorsSharedCollection; trackBy: trackCompradorById"
+            >
+              {{ compradorOption.id }}
+            </option>
+          </select>
+        </div>
+        <div *ngIf="editForm.get(['comprador'])!.invalid && (editForm.get(['comprador'])!.dirty || editForm.get(['comprador'])!.touched)">
+          <small
+            class="form-text text-danger"
+            *ngIf="editForm.get(['comprador'])?.errors?.required"
+            jhiTranslate="entity.validation.required"
+          >
+            This field is required.
+          </small>
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label">Coches Disponibles</label>
+          <select class="form-control" data-cy="coche" name="coche" formControlName="coche">
+            <option *ngIf="!editForm.get('coche')!.value" [ngValue]="null" selected></option>
+            <option
+              [ngValue]="cocheOption.id === editForm.get('coche')!.value?.id ? editForm.get('coche')!.value : cocheOption"
+              *ngFor="let cocheOption of cochesSharedCollection"
+            >
+              {{ cocheOption.id }}
+            </option>
+          </select>
+        </div>
+        <div *ngIf="editForm.get(['coche'])!.invalid && (editForm.get(['coche'])!.dirty || editForm.get(['coche'])!.touched)">
+          <small class="form-text text-danger" *ngIf="editForm.get(['coche'])?.errors?.required" jhiTranslate="entity.validation.required">
+            This field is required.
+          </small>
+        </div>
+      </div>
+
+      <div>
+        <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary" (click)="previousState()">
+          <fa-icon icon="ban"></fa-icon>&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
+        </button>
+
+        <button
+          type="submit"
+          id="save-entity"
+          data-cy="entityCreateSaveButton"
+          [disabled]="editForm.invalid || isSaving"
+          class="btn btn-primary"
+        >
+          <fa-icon icon="save"></fa-icon>&nbsp;<span jhiTranslate="entity.action.save">Save</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

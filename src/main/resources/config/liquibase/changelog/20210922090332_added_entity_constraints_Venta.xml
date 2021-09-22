@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd">
+    <!--
+        Added the constraints for entity Venta.
+    -->
+    <changeSet id="20210922090332-2" author="jhipster">
+
+        <addForeignKeyConstraint baseColumnNames="vendedor_id"
+                                 baseTableName="venta"
+                                 constraintName="fk_venta__vendedor_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="vendedor"/>
+
+        <addForeignKeyConstraint baseColumnNames="comprador_id"
+                                 baseTableName="venta"
+                                 constraintName="fk_venta__comprador_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="comprador"/>
+    </changeSet>
+</databaseChangeLog>

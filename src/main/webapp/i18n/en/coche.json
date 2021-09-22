@@ -1,0 +1,27 @@
+{
+  "concesionario2App": {
+    "coche": {
+      "home": {
+        "title": "Coches",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Create a new Coche",
+        "createOrEditLabel": "Create or edit a Coche",
+        "notFound": "No Coches found"
+      },
+      "created": "A new Coche is created with identifier {{ param }}",
+      "updated": "A Coche is updated with identifier {{ param }}",
+      "deleted": "A Coche is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Coche {{ id }}?"
+      },
+      "detail": {
+        "title": "Coche"
+      },
+      "id": "ID",
+      "marca": "Marca",
+      "modelo": "Modelo",
+      "precio": "Precio",
+      "venta": "Venta"
+    }
+  }
+}

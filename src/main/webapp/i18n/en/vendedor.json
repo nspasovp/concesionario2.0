@@ -1,0 +1,30 @@
+{
+  "concesionario2App": {
+    "vendedor": {
+      "home": {
+        "title": "Vendedors",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Create a new Vendedor",
+        "createOrEditLabel": "Create or edit a Vendedor",
+        "notFound": "No Vendedors found"
+      },
+      "created": "A new Vendedor is created with identifier {{ param }}",
+      "updated": "A Vendedor is updated with identifier {{ param }}",
+      "deleted": "A Vendedor is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Vendedor {{ id }}?"
+      },
+      "detail": {
+        "title": "Vendedor"
+      },
+      "id": "ID",
+      "dni": "Dni",
+      "nombre": "Nombre",
+      "primeriApellido": "Primeri Apellido",
+      "segundoApellido": "Segundo Apellido",
+      "fechaNacimiento": "Fecha Nacimiento",
+      "fechaContratacion": "Fecha Contratacion",
+      "fechaBaja": "Fecha Baja"
+    }
+  }
+}

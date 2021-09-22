@@ -1,0 +1,56 @@
+<div class="row justify-content-center">
+  <div class="col-8">
+    <div *ngIf="vendedor">
+      <h2 data-cy="vendedorDetailsHeading"><span jhiTranslate="concesionario2App.vendedor.detail.title">Vendedor</span></h2>
+
+      <hr />
+
+      <jhi-alert-error></jhi-alert-error>
+
+      <jhi-alert></jhi-alert>
+
+      <dl class="row-md jh-entity-details">
+        <dt><span jhiTranslate="global.field.id">ID</span></dt>
+        <dd>
+          <span>{{ vendedor.id }}</span>
+        </dd>
+        <dt><span jhiTranslate="concesionario2App.vendedor.dni">Dni</span></dt>
+        <dd>
+          <span>{{ vendedor.dni }}</span>
+        </dd>
+        <dt><span jhiTranslate="concesionario2App.vendedor.nombre">Nombre</span></dt>
+        <dd>
+          <span>{{ vendedor.nombre }}</span>
+        </dd>
+        <dt><span jhiTranslate="concesionario2App.vendedor.primeriApellido">Primeri Apellido</span></dt>
+        <dd>
+          <span>{{ vendedor.primeriApellido }}</span>
+        </dd>
+        <dt><span jhiTranslate="concesionario2App.vendedor.segundoApellido">Segundo Apellido</span></dt>
+        <dd>
+          <span>{{ vendedor.segundoApellido }}</span>
+        </dd>
+        <dt><span jhiTranslate="concesionario2App.vendedor.fechaNacimiento">Fecha Nacimiento</span></dt>
+        <dd>
+          <span>{{ vendedor.fechaNacimiento | formatMediumDate }}</span>
+        </dd>
+        <dt><span jhiTranslate="concesionario2App.vendedor.fechaContratacion">Fecha Contratacion</span></dt>
+        <dd>
+          <span>{{ vendedor.fechaContratacion | formatMediumDate }}</span>
+        </dd>
+        <dt><span jhiTranslate="concesionario2App.vendedor.fechaBaja">Fecha Baja</span></dt>
+        <dd>
+          <span>{{ vendedor.fechaBaja | formatMediumDate }}</span>
+        </dd>
+      </dl>
+
+      <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+        <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back">Back</span>
+      </button>
+
+      <button type="button" [routerLink]="['/vendedor', vendedor.id, 'edit']" class="btn btn-primary">
+        <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit">Edit</span>
+      </button>
+    </div>
+  </div>
+</div>
