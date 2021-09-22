@@ -8,6 +8,7 @@ export interface IVenta {
   numeroCoches?: number;
   vendedor?: IVendedor;
   comprador?: IComprador;
+  numFactura?: string;
 }
 
 export class Venta implements IVenta {
@@ -16,7 +17,8 @@ export class Venta implements IVenta {
     public fecha?: dayjs.Dayjs,
     public numeroCoches?: number,
     public vendedor?: IVendedor,
-    public comprador?: IComprador
+    public comprador?: IComprador,
+    public numFactura?: string
   ) {}
 }
 

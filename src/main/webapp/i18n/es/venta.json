@@ -21,7 +21,8 @@
       "fecha": "Fecha",
       "numeroCoches": "Numero Coches",
       "vendedor": "Vendedor",
-      "comprador": "Comprador"
+      "comprador": "Comprador",
+      "numFactura": "Numero Factura"
     }
   }
 }

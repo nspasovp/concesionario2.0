@@ -32,6 +32,7 @@ export class VentaUpdateComponent implements OnInit {
     vendedor: [null, Validators.required],
     comprador: [null, Validators.required],
     coche: [null, Validators.required],
+    numFactura: [null],
   });
 
   constructor(
@@ -93,12 +94,14 @@ export class VentaUpdateComponent implements OnInit {
   }
 
   protected updateForm(venta: IVenta): void {
+    //SETTER
     this.editForm.patchValue({
       id: venta.id,
       fecha: venta.fecha,
       numeroCoches: venta.numeroCoches,
       vendedor: venta.vendedor,
       comprador: venta.comprador,
+      numFactura: venta.numFactura,
     });
 
     this.vendedorsSharedCollection = this.vendedorService.addVendedorToCollectionIfMissing(this.vendedorsSharedCollection, venta.vendedor);
@@ -138,6 +141,7 @@ export class VentaUpdateComponent implements OnInit {
   }
 
   protected createFromForm(): IVenta {
+    //GETTER
     return {
       ...new Venta(),
       id: this.editForm.get(['id'])!.value,
@@ -145,6 +149,7 @@ export class VentaUpdateComponent implements OnInit {
       numeroCoches: this.editForm.get(['numeroCoches'])!.value,
       vendedor: this.editForm.get(['vendedor'])!.value,
       comprador: this.editForm.get(['comprador'])!.value,
+      numFactura: this.editForm.get(['numFactura'])!.value,
     };
   }
 }

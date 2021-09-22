@@ -38,6 +38,9 @@ public class Venta implements Serializable {
     @NotNull
     private Comprador comprador;
 
+    @Column(name = "numFactura", nullable = true)
+    private String numFactura;
+
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
         return id;
@@ -102,6 +105,14 @@ public class Venta implements Serializable {
 
     public void setComprador(Comprador comprador) {
         this.comprador = comprador;
+    }
+
+    public String getNumFactura() {
+        return numFactura;
+    }
+
+    public void setNumFactura(String numFactura) {
+        this.numFactura = numFactura;
     }
 
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
