@@ -1,0 +1,8 @@
+{
+  "generator-jhipster:7.1.0": {
+    "promptValues": {
+      "packageName": "es.melit.concesionario2",
+      "nativeLanguage": "es"
+    }
+  }
+}
