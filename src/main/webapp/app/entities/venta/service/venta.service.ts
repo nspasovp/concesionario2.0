@@ -9,6 +9,7 @@ import { DATE_FORMAT } from 'app/config/input.constants';
 import { ApplicationConfigService } from 'app/core/config/application-config.service';
 import { createRequestOption } from 'app/core/request/request-util';
 import { IVenta, getVentaIdentifier } from '../venta.model';
+import { ICoche } from 'app/entities/coche/coche.model';
 
 export type EntityResponseType = HttpResponse<IVenta>;
 export type EntityArrayResponseType = HttpResponse<IVenta[]>;
@@ -19,10 +20,11 @@ export class VentaService {
 
   constructor(protected http: HttpClient, protected applicationConfigService: ApplicationConfigService) {}
 
-  create(venta: IVenta): Observable<EntityResponseType> {
+  create(venta: IVenta, coche: number): Observable<EntityResponseType> {
     const copy = this.convertDateFromClient(venta);
+
     return this.http
-      .post<IVenta>(this.resourceUrl, copy, { observe: 'response' })
+      .post<IVenta>(`${this.resourceUrl}/${coche}`, copy, { observe: 'response' })
       .pipe(map((res: EntityResponseType) => this.convertDateFromServer(res)));
   }
 
@@ -52,13 +54,6 @@ export class VentaService {
       .get<IVenta[]>(this.resourceUrl, { params: options, observe: 'response' })
       .pipe(map((res: EntityArrayResponseType) => this.convertDateArrayFromServer(res)));
   }
-
-  /*queryD(req?: any): Observable<EntityArrayResponseType> {
-    const options = createRequestOption(req);
-    return this.http
-      .get<IVenta[]>(this.resourceUrl+'D', { params: options, observe: 'response' })
-      .pipe(map((res: EntityArrayResponseType) => this.convertDateArrayFromServer(res)));
-  }*/
 
   delete(id: number): Observable<HttpResponse<{}>> {
     return this.http.delete(`${this.resourceUrl}/${id}`, { observe: 'response' });

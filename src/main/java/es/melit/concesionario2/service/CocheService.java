@@ -1,7 +1,9 @@
 package es.melit.concesionario2.service;
 
+import es.melit.concesionario2.domain.*;
 import es.melit.concesionario2.domain.Coche;
-import es.melit.concesionario2.repository.CocheRepository;
+import es.melit.concesionario2.repository.*;
+import es.melit.concesionario2.service.*;
 import java.util.List;
 import java.util.Optional;
 import org.slf4j.Logger;
@@ -21,9 +23,11 @@ public class CocheService {
     private final Logger log = LoggerFactory.getLogger(CocheService.class);
 
     private final CocheRepository cocheRepository;
+    private final VentaRepository ventaRepository;
 
-    public CocheService(CocheRepository cocheRepository) {
+    public CocheService(CocheRepository cocheRepository, VentaRepository ventaRepository) {
         this.cocheRepository = cocheRepository;
+        this.ventaRepository = ventaRepository;
     }
 
     /**
@@ -66,6 +70,12 @@ public class CocheService {
             .map(cocheRepository::save);
     }
 
+    public void cocheVendido(Venta venta, Long cocheId) {
+        Optional<Coche> c = findOne(cocheId);
+        c.get().setVenta(venta);
+        save(c.get());
+    }
+
     /**
      * Get all the coches.
      *
@@ -78,6 +88,11 @@ public class CocheService {
         return cocheRepository.findAll(pageable);
     }
 
+    /**
+     * Get the not selled coches.
+     *
+     * @return the list of entities.
+     */
     @Transactional(readOnly = true)
     public List<Coche> findByVentaIsNull() {
         log.debug("Request to get all Coches");

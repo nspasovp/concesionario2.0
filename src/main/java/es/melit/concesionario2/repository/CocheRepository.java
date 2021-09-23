@@ -1,6 +1,7 @@
 package es.melit.concesionario2.repository;
 
 import es.melit.concesionario2.domain.Coche;
+import es.melit.concesionario2.repository.VentaRepository;
 import java.util.List;
 import org.springframework.data.jpa.repository.*;
 import org.springframework.stereotype.Repository;

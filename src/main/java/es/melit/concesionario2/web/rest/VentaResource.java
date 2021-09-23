@@ -1,7 +1,10 @@
 package es.melit.concesionario2.web.rest;
 
+import es.melit.concesionario2.domain.*;
 import es.melit.concesionario2.domain.Venta;
+import es.melit.concesionario2.repository.CocheRepository;
 import es.melit.concesionario2.repository.VentaRepository;
+import es.melit.concesionario2.service.CocheService;
 import es.melit.concesionario2.service.VentaService;
 import es.melit.concesionario2.web.rest.errors.BadRequestAlertException;
 import java.net.URI;
@@ -43,9 +46,12 @@ public class VentaResource {
 
     private final VentaRepository ventaRepository;
 
-    public VentaResource(VentaService ventaService, VentaRepository ventaRepository) {
+    private final CocheService cocheService;
+
+    public VentaResource(VentaService ventaService, VentaRepository ventaRepository, CocheService cocheService) {
         this.ventaService = ventaService;
         this.ventaRepository = ventaRepository;
+        this.cocheService = cocheService;
     }
 
     /**
@@ -55,13 +61,17 @@ public class VentaResource {
      * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new venta, or with status {@code 400 (Bad Request)} if the venta has already an ID.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PostMapping("/ventas")
-    public ResponseEntity<Venta> createVenta(@Valid @RequestBody Venta venta) throws URISyntaxException {
-        log.debug("REST request to save Venta : {}", venta);
+    @PostMapping("/ventas/{cocheId}")
+    public ResponseEntity<Venta> createVenta(@Valid @RequestBody Venta venta, @PathVariable(value = "cocheId") final Long cocheId)
+        throws URISyntaxException {
+        log.debug("REST request to save Venta : {} cocheId {}", venta, cocheId);
+
         if (venta.getId() != null) {
             throw new BadRequestAlertException("A new venta cannot already have an ID", ENTITY_NAME, "idexists");
         }
         Venta result = ventaService.save(venta);
+        cocheService.cocheVendido(result, cocheId);
+
         return ResponseEntity
             .created(new URI("/api/ventas/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
@@ -149,14 +159,6 @@ public class VentaResource {
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
-
-    /*@GetMapping("/ventasD")
-    public ResponseEntity<List<Venta>> getAllVentasDisponibles(Pageable pageable) {
-        log.debug("REST request to get a page of Ventas");
-        List<Venta> ventasDisponibles = ventaService.findByVentaIsNull();
-        //HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
-        return ResponseEntity.ok().body(ventasDisponibles);
-    }*/
 
     /**
      * {@code GET  /ventas/:id} : get the "id" venta.
