@@ -34,6 +34,12 @@
             <a [routerLink]="['/comprador', venta.comprador?.id, 'view']">{{ venta.comprador?.id }}</a>
           </div>
         </dd>
+        <dt><span jhiTranslate="concesionario2App.venta.numFactura">Numero Factura</span></dt>
+        <dd>
+          <div *ngIf="venta.numFactura">
+            <a [routerLink]="['/numFactura', venta.numFactura, 'view']">{{ venta.numFactura }}</a>
+          </div>
+        </dd>
       </dl>
 
       <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
