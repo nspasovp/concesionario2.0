@@ -48,6 +48,8 @@ public class VentaResource {
 
     private final CocheService cocheService;
 
+    //private final VentaRepository ventaRepository;
+
     public VentaResource(VentaService ventaService, VentaRepository ventaRepository, CocheService cocheService) {
         this.ventaService = ventaService;
         this.ventaRepository = ventaRepository;
@@ -182,6 +184,8 @@ public class VentaResource {
     @DeleteMapping("/ventas/{id}")
     public ResponseEntity<Void> deleteVenta(@PathVariable Long id) {
         log.debug("REST request to delete Venta : {}", id);
+        Optional<Venta> venta = ventaService.findOne(id);
+        cocheService.deleteVenta(venta.get());
         ventaService.delete(id);
         return ResponseEntity
             .noContent()

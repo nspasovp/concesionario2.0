@@ -120,4 +120,9 @@ public class CocheService {
         log.debug("Request to delete Coche : {}", id);
         cocheRepository.deleteById(id);
     }
+
+    public void deleteVenta(Venta venta) {
+        Optional<Coche> coche = cocheRepository.findCocheByVenta(venta);
+        coche.get().setVenta2();
+    }
 }
