@@ -59,10 +59,11 @@ export class VentaUpdateComponent implements OnInit {
   save(): void {
     this.isSaving = true;
     const venta = this.createFromForm();
+    const coche = this.editForm.get(['coche'])!.value;
     if (venta.id !== undefined) {
       this.subscribeToSaveResponse(this.ventaService.update(venta));
     } else {
-      this.subscribeToSaveResponse(this.ventaService.create(venta));
+      this.subscribeToSaveResponse(this.ventaService.create(venta, coche));
     }
   }
 
@@ -141,7 +142,7 @@ export class VentaUpdateComponent implements OnInit {
   }
 
   protected createFromForm(): IVenta {
-    //GETTER
+    // GETTER
     return {
       ...new Venta(),
       id: this.editForm.get(['id'])!.value,

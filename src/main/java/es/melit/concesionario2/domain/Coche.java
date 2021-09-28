@@ -103,6 +103,10 @@ public class Coche implements Serializable {
         this.venta = venta;
     }
 
+    public void setVenta2() {
+        this.venta = null;
+    }
+
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override

@@ -1,7 +1,9 @@
 package es.melit.concesionario2.service;
 
 import es.melit.concesionario2.domain.Venta;
+import es.melit.concesionario2.repository.CocheRepository;
 import es.melit.concesionario2.repository.VentaRepository;
+import es.melit.concesionario2.service.*;
 import java.util.List;
 import java.util.Optional;
 import org.slf4j.Logger;
@@ -21,9 +23,11 @@ public class VentaService {
     private final Logger log = LoggerFactory.getLogger(VentaService.class);
 
     private final VentaRepository ventaRepository;
+    private final CocheService cocheService;
 
-    public VentaService(VentaRepository ventaRepository) {
+    public VentaService(VentaRepository ventaRepository, CocheService cocheService) {
         this.ventaRepository = ventaRepository;
+        this.cocheService = cocheService;
     }
 
     /**

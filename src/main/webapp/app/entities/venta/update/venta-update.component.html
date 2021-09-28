@@ -125,10 +125,7 @@
           <label class="form-control-label">Coches Disponibles</label>
           <select class="form-control" data-cy="coche" name="coche" formControlName="coche">
             <option *ngIf="!editForm.get('coche')!.value" [ngValue]="null" selected></option>
-            <option
-              [ngValue]="cocheOption.id === editForm.get('coche')!.value?.id ? editForm.get('coche')!.value : cocheOption"
-              *ngFor="let cocheOption of cochesSharedCollection"
-            >
+            <option [ngValue]="cocheOption.id" *ngFor="let cocheOption of cochesSharedCollection">
               {{ cocheOption.id }}
             </option>
           </select>
