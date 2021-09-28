@@ -17,6 +17,7 @@ import javax.validation.constraints.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.configurationprocessor.json.JSONException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
@@ -62,10 +63,11 @@ public class VentaResource {
      * @param venta the venta to create.
      * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new venta, or with status {@code 400 (Bad Request)} if the venta has already an ID.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
+     * @throws JSONException
      */
     @PostMapping("/ventas/{cocheId}")
-    public ResponseEntity<Venta> createVenta(@Valid @RequestBody Venta venta, @PathVariable(value = "cocheId") final Long cocheId)
-        throws URISyntaxException {
+    public ResponseEntity<Venta> createVenta(@Valid @RequestBody Venta venta, @PathVariable(value = "cocheId") final String cocheId)
+        throws URISyntaxException, JSONException {
         log.debug("REST request to save Venta : {} cocheId {}", venta, cocheId);
 
         if (venta.getId() != null) {
@@ -73,7 +75,6 @@ public class VentaResource {
         }
         Venta result = ventaService.save(venta);
         cocheService.cocheVendido(result, cocheId);
-
         return ResponseEntity
             .created(new URI("/api/ventas/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))

@@ -20,7 +20,7 @@ export class VentaService {
 
   constructor(protected http: HttpClient, protected applicationConfigService: ApplicationConfigService) {}
 
-  create(venta: IVenta, coche: number): Observable<EntityResponseType> {
+  create(venta: IVenta, coche: string): Observable<EntityResponseType> {
     const copy = this.convertDateFromClient(venta);
 
     return this.http

@@ -82,10 +82,12 @@
           <select class="form-control" id="field_vendedor" data-cy="vendedor" name="vendedor" formControlName="vendedor">
             <option *ngIf="!editForm.get('vendedor')!.value" [ngValue]="null" selected></option>
             <option
-              [ngValue]="vendedorOption.id === editForm.get('vendedor')!.value?.id ? editForm.get('vendedor')!.value : vendedorOption"
+              [ngValue]="
+                vendedorOption.nombre === editForm.get('vendedor')!.value?.nombre ? editForm.get('vendedor')!.value : vendedorOption
+              "
               *ngFor="let vendedorOption of vendedorsSharedCollection; trackBy: trackVendedorById"
             >
-              {{ vendedorOption.id }}
+              {{ vendedorOption.nombre }} {{ vendedorOption.primeriApellido }} {{ vendedorOption.segundoApellido }}
             </option>
           </select>
         </div>
@@ -123,7 +125,7 @@
 
         <div class="form-group">
           <label class="form-control-label">Coches Disponibles</label>
-          <select class="form-control" data-cy="coche" name="coche" formControlName="coche">
+          <select class="form-control" data-cy="coche" name="coche" formControlName="coche" multiple>
             <option *ngIf="!editForm.get('coche')!.value" [ngValue]="null" selected></option>
             <option [ngValue]="cocheOption.id" *ngFor="let cocheOption of cochesSharedCollection">
               {{ cocheOption.id }}

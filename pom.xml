@@ -395,7 +395,13 @@
                             <artifactId>nohttp-checkstyle</artifactId>
                             <version>${nohttp-checkstyle.version}</version>
                         </dependency>
+                        <dependency>
+                            <groupId>com.fasterxml.jackson.core</groupId>
+                            <artifactId>jackson-databind</artifactId>
+                            <version>2.11.2</version>
+                        </dependency>
                     </dependencies>
+
                     <configuration>
                         <configLocation>checkstyle.xml</configLocation>
                         <includes>pom.xml,README.md</includes>

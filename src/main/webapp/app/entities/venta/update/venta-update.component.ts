@@ -60,10 +60,11 @@ export class VentaUpdateComponent implements OnInit {
     this.isSaving = true;
     const venta = this.createFromForm();
     const coche = this.editForm.get(['coche'])!.value;
+    const cocheJSON = JSON.stringify(coche);
     if (venta.id !== undefined) {
       this.subscribeToSaveResponse(this.ventaService.update(venta));
     } else {
-      this.subscribeToSaveResponse(this.ventaService.create(venta, coche));
+      this.subscribeToSaveResponse(this.ventaService.create(venta, cocheJSON));
     }
   }
 

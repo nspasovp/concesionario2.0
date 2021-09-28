@@ -1,17 +1,24 @@
 package es.melit.concesionario2.service;
 
+import ch.qos.logback.core.pattern.parser.Parser;
 import es.melit.concesionario2.domain.*;
 import es.melit.concesionario2.domain.Coche;
 import es.melit.concesionario2.repository.*;
 import es.melit.concesionario2.service.*;
+import io.jsonwebtoken.lang.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.configurationprocessor.json.JSONArray;
+import org.springframework.boot.configurationprocessor.json.JSONException;
+import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import springfox.documentation.spring.web.json.Json;
 
 /**
  * Service Implementation for managing {@link Coche}.
@@ -23,11 +30,9 @@ public class CocheService {
     private final Logger log = LoggerFactory.getLogger(CocheService.class);
 
     private final CocheRepository cocheRepository;
-    private final VentaRepository ventaRepository;
 
-    public CocheService(CocheRepository cocheRepository, VentaRepository ventaRepository) {
+    public CocheService(CocheRepository cocheRepository) {
         this.cocheRepository = cocheRepository;
-        this.ventaRepository = ventaRepository;
     }
 
     /**
@@ -70,10 +75,21 @@ public class CocheService {
             .map(cocheRepository::save);
     }
 
-    public void cocheVendido(Venta venta, Long cocheId) {
-        Optional<Coche> c = findOne(cocheId);
-        c.get().setVenta(venta);
-        save(c.get());
+    /**
+     * Set field venta when coche is selled.
+     *
+     * @param Venta Venta object
+     * @param Long  coche Id.
+     * @throws JSONException
+     *
+     */
+    public void cocheVendido(Venta venta, String cochesId) throws JSONException {
+        ArrayList<Long> miarray = jsonStringToArray(cochesId);
+        for (int i = 0; i < miarray.size(); i++) {
+            Optional<Coche> c = findOne(miarray.get(i));
+            c.get().setVenta(venta);
+            save(c.get());
+        }
     }
 
     /**
@@ -132,5 +148,16 @@ public class CocheService {
             Optional<Coche> coche = cocheRepository.findCocheByVenta(venta);
             coche.get().setVenta2();
         }
+    }
+
+    ArrayList<Long> jsonStringToArray(String jsonString) throws JSONException {
+        ArrayList<Long> stringArray = new ArrayList<Long>();
+        JSONArray jsonArray = new JSONArray(jsonString);
+
+        for (int i = 0; i < jsonArray.length(); i++) {
+            stringArray.add(jsonArray.getLong(i));
+        }
+
+        return stringArray;
     }
 }
