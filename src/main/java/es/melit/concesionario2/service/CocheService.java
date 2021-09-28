@@ -121,8 +121,16 @@ public class CocheService {
         cocheRepository.deleteById(id);
     }
 
+    /**
+     * Delete the field Venta from Coche.
+     *
+     * @param Venta the venta to delete.
+     */
     public void deleteVenta(Venta venta) {
-        Optional<Coche> coche = cocheRepository.findCocheByVenta(venta);
-        coche.get().setVenta2();
+        //Esta condición comprueba que haya coche asignado a la venta, en caso contrario no realiza nada
+        if (cocheRepository.findCocheByVenta(venta).isPresent()) {
+            Optional<Coche> coche = cocheRepository.findCocheByVenta(venta);
+            coche.get().setVenta2();
+        }
     }
 }

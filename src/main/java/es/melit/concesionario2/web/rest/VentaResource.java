@@ -184,8 +184,11 @@ public class VentaResource {
     @DeleteMapping("/ventas/{id}")
     public ResponseEntity<Void> deleteVenta(@PathVariable Long id) {
         log.debug("REST request to delete Venta : {}", id);
+        //Obtenemos la venta a traves del id
         Optional<Venta> venta = ventaService.findOne(id);
+        //Se borra la venta que tenga un coche asignado
         cocheService.deleteVenta(venta.get());
+        //Borra la venta sin coche asignado
         ventaService.delete(id);
         return ResponseEntity
             .noContent()

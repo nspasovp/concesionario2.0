@@ -44,11 +44,11 @@
             <span jhiTranslate="concesionario2App.venta.numeroCoches">Numero Coches</span>
             <fa-icon icon="sort"></fa-icon>
           </th>
-          <th scope="col" jhiSortBy="vendedor.id">
+          <th scope="col" jhiSortBy="vendedor.nombre">
             <span jhiTranslate="concesionario2App.venta.vendedor">Vendedor</span>
             <fa-icon icon="sort"></fa-icon>
           </th>
-          <th scope="col" jhiSortBy="comprador.id">
+          <th scope="col" jhiSortBy="comprador.nombre">
             <span jhiTranslate="concesionario2App.venta.comprador">Comprador</span>
             <fa-icon icon="sort"></fa-icon>
           </th>
@@ -69,12 +69,12 @@
           <td>{{ venta.numeroCoches }}</td>
           <td>
             <div *ngIf="venta.vendedor">
-              <a [routerLink]="['/vendedor', venta.vendedor?.id, 'view']">{{ venta.vendedor?.id }}</a>
+              <a [routerLink]="['/vendedor', venta.vendedor?.nombre, 'view']">{{ venta.vendedor?.nombre }}</a>
             </div>
           </td>
           <td>
             <div *ngIf="venta.comprador">
-              <a [routerLink]="['/comprador', venta.comprador?.id, 'view']">{{ venta.comprador?.id }}</a>
+              <a [routerLink]="['/comprador', venta.comprador?.nombre, 'view']">{{ venta.comprador?.nombre }}</a>
             </div>
           </td>
 

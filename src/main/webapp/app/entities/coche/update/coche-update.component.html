@@ -46,18 +46,16 @@
           </div>
         </div>
 
-        <div class="form-group">
+        <!--<div class="form-group">
           <label class="form-control-label" jhiTranslate="concesionario2App.coche.venta" for="field_venta">Venta</label>
           <select class="form-control" id="field_venta" data-cy="venta" name="venta" formControlName="venta">
             <option [ngValue]="null"></option>
-            <option
-              [ngValue]="ventaOption.id === editForm.get('venta')!.value?.id ? editForm.get('venta')!.value : ventaOption"
-              *ngFor="let ventaOption of ventasSharedCollection; trackBy: trackVentaById"
-            >
+            <option [ngValue]="ventaOption.id === editForm.get('venta')!.value?.id ? editForm.get('venta')!.value : ventaOption"
+              *ngFor="let ventaOption of ventasSharedCollection; trackBy: trackVentaById">
               {{ ventaOption.id }}
             </option>
           </select>
-        </div>
+        </div>-->
       </div>
 
       <div>
