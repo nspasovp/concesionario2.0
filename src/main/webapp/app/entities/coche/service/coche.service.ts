@@ -32,6 +32,10 @@ export class CocheService {
     return this.http.get<ICoche>(`${this.resourceUrl}/${id}`, { observe: 'response' });
   }
 
+  /*findNumCoches(id: number): Observable<EntityArrayResponseType> {
+    return this.http.get<ICoche[]>(`${this.resourceUrl}/numCoches/${id}`, { observe: 'response' });
+  }*/
+
   query(req?: any): Observable<EntityArrayResponseType> {
     const options = createRequestOption(req);
     return this.http.get<ICoche[]>(this.resourceUrl, { params: options, observe: 'response' });

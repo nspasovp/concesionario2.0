@@ -1,11 +1,8 @@
 package es.melit.concesionario2.service;
 
-import ch.qos.logback.core.pattern.parser.Parser;
 import es.melit.concesionario2.domain.*;
 import es.melit.concesionario2.domain.Coche;
 import es.melit.concesionario2.repository.*;
-import es.melit.concesionario2.service.*;
-import io.jsonwebtoken.lang.Arrays;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -13,12 +10,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.configurationprocessor.json.JSONArray;
 import org.springframework.boot.configurationprocessor.json.JSONException;
-import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import springfox.documentation.spring.web.json.Json;
 
 /**
  * Service Implementation for managing {@link Coche}.
@@ -159,5 +154,10 @@ public class CocheService {
         }
 
         return stringArray;
+    }
+
+    public int numeroCochesPorVenta(Long id) {
+        List<Coche> num = cocheRepository.obtenerNumCochesIdVenta(id);
+        return num.size();
     }
 }

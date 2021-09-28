@@ -176,6 +176,13 @@ public class VentaResource {
         return ResponseUtil.wrapOrNotFound(venta);
     }
 
+    @GetMapping("/ventas/numCoches/{id}")
+    public int getNumCochesPorVenta(@PathVariable Long id) {
+        log.debug("REST request to get Venta : {}", id);
+        int numCoches = cocheService.numeroCochesPorVenta(id);
+        return numCoches;
+    }
+
     /**
      * {@code DELETE  /ventas/:id} : delete the "id" venta.
      *
