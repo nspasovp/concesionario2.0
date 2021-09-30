@@ -131,8 +131,10 @@ public class VentaService {
 
     public void actualizarVentaNullCoches(Venta venta) {
         List<Coche> coches = cocheRepository.findCochesByVenta(venta);
-        for (int i = 0; i < coches.size(); i++) {
-            coches.get(i).setVentaToNull();
+        if (!coches.isEmpty()) {
+            for (int i = 0; i < coches.size(); i++) {
+                coches.get(i).setVentaToNull();
+            }
         }
     }
 }

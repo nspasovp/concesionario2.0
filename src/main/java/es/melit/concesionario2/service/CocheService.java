@@ -1,7 +1,6 @@
 package es.melit.concesionario2.service;
 
 import es.melit.concesionario2.domain.*;
-import es.melit.concesionario2.domain.Coche;
 import es.melit.concesionario2.repository.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,9 +24,11 @@ public class CocheService {
     private final Logger log = LoggerFactory.getLogger(CocheService.class);
 
     private final CocheRepository cocheRepository;
+    private final VentaRepository ventaRepository;
 
-    public CocheService(CocheRepository cocheRepository) {
+    public CocheService(CocheRepository cocheRepository, VentaRepository ventaRepository) {
         this.cocheRepository = cocheRepository;
+        this.ventaRepository = ventaRepository;
     }
 
     /**
@@ -137,15 +138,35 @@ public class CocheService {
      *
      * @param Venta the venta to delete.
      */
-    public void deleteVenta(Venta venta) {
-        //Esta condición comprueba que haya coche asignado a la venta, en caso contrario no realiza nada
+    public void deleteVentaFromCoche(Venta venta) {
+        // Esta condición comprueba que haya coche asignado a la venta, en caso
+        // contrario no realiza nada
         if (cocheRepository.findCocheByVenta(venta).isPresent()) {
             Optional<Coche> coche = cocheRepository.findCocheByVenta(venta);
             coche.get().setVentaToNull();
         }
     }
 
-    ArrayList<Long> jsonStringToArray(String jsonString) throws JSONException {
+    public void deleteVentaFromCoches(Venta venta, String cochesId) throws JSONException {
+        ArrayList<Long> miarray = jsonStringToArray(cochesId);
+        for (int i = 0; i < miarray.size(); i++) {
+            Optional<Venta> v = ventaRepository.findById(miarray.get(i));
+            if (cocheRepository.findCocheByVenta(v.get()).isPresent()) {
+                Optional<Coche> c = findOne(miarray.get(i));
+                c.get().setVentaToNull();
+                save(c.get());
+            }
+        }
+    }
+
+    /**
+     * Convert JSON String to ArrayList<Long>.
+     *
+     * @param String the JSON to convert.
+     *
+     * @return the StringArray<Long>.
+     */
+    public ArrayList<Long> jsonStringToArray(String jsonString) throws JSONException {
         ArrayList<Long> stringArray = new ArrayList<Long>();
         JSONArray jsonArray = new JSONArray(jsonString);
 
@@ -156,6 +177,13 @@ public class CocheService {
         return stringArray;
     }
 
+    /**
+     * Get JSON String to ArrayList<Long>.
+     *
+     * @param String the JSON to convert.
+     *
+     * @return the StringArray<Long>.
+     */
     public int numeroCochesPorVenta(Long id) {
         List<Coche> num = cocheRepository.obtenerNumCochesIdVenta(id);
         return num.size();

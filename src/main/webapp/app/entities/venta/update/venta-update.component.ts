@@ -62,7 +62,7 @@ export class VentaUpdateComponent implements OnInit {
     const coche = this.editForm.get(['coche'])!.value;
     const cocheJSON = JSON.stringify(coche);
     if (venta.id !== undefined) {
-      this.subscribeToSaveResponse(this.ventaService.update(venta));
+      this.subscribeToSaveResponse(this.ventaService.update(venta, cocheJSON));
     } else {
       this.subscribeToSaveResponse(this.ventaService.create(venta, cocheJSON));
     }

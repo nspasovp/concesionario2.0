@@ -28,10 +28,10 @@ export class VentaService {
       .pipe(map((res: EntityResponseType) => this.convertDateFromServer(res)));
   }
 
-  update(venta: IVenta): Observable<EntityResponseType> {
+  update(venta: IVenta, coche: string): Observable<EntityResponseType> {
     const copy = this.convertDateFromClient(venta);
     return this.http
-      .put<IVenta>(`${this.resourceUrl}/${getVentaIdentifier(venta) as number}`, copy, { observe: 'response' })
+      .put<IVenta>(`${this.resourceUrl}/update/${coche}`, copy, { observe: 'response' })
       .pipe(map((res: EntityResponseType) => this.convertDateFromServer(res)));
   }
 
