@@ -37,7 +37,7 @@
           </div>
         </div>
 
-        <!--<div class="form-group">
+        <div class="form-group">
           <label class="form-control-label" jhiTranslate="concesionario2App.venta.numeroCoches" for="field_numeroCoches"
             >Numero Coches</label
           >
@@ -75,7 +75,7 @@
               This field should be a number.
             </small>
           </div>
-        </div>-->
+        </div>
 
         <div class="form-group">
           <label class="form-control-label" jhiTranslate="concesionario2App.venta.vendedor" for="field_vendedor">Vendedor</label>
@@ -128,7 +128,7 @@
           <select class="form-control" data-cy="coche" name="coche" formControlName="coche" multiple>
             <option *ngIf="!editForm.get('coche')!.value" [ngValue]="null" selected></option>
             <option [ngValue]="cocheOption.id" *ngFor="let cocheOption of cochesSharedCollection">
-              {{ cocheOption.id }}
+              [{{ cocheOption.id }}] -> {{ cocheOption.marca }} {{ cocheOption.modelo }}
             </option>
           </select>
         </div>

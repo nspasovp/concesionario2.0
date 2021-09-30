@@ -18,6 +18,8 @@ public interface CocheRepository extends JpaRepository<Coche, Long> {
 
     Optional<Coche> findCocheByVenta(Venta venta);
 
+    List<Coche> findCochesByVenta(Venta venta);
+
     @Query("SELECT c FROM Coche c WHERE c.venta.id = :idVenta")
     List<Coche> obtenerNumCochesIdVenta(@Param(value = "idVenta") Long venta);
 }

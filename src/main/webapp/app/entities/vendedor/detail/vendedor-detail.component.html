@@ -42,6 +42,11 @@
         <dd>
           <span>{{ vendedor.fechaBaja | formatMediumDate }}</span>
         </dd>
+
+        <dt><span jhiTranslate="concesionario2App.vendedor.comision">Comision</span></dt>
+        <dd>
+          <span>{{ vendedor.comision }}</span>
+        </dd>
       </dl>
 
       <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">

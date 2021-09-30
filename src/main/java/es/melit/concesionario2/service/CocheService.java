@@ -141,7 +141,7 @@ public class CocheService {
         //Esta condición comprueba que haya coche asignado a la venta, en caso contrario no realiza nada
         if (cocheRepository.findCocheByVenta(venta).isPresent()) {
             Optional<Coche> coche = cocheRepository.findCocheByVenta(venta);
-            coche.get().setVenta2();
+            coche.get().setVentaToNull();
         }
     }
 
@@ -159,5 +159,14 @@ public class CocheService {
     public int numeroCochesPorVenta(Long id) {
         List<Coche> num = cocheRepository.obtenerNumCochesIdVenta(id);
         return num.size();
+    }
+
+    public Double TotalPrecioCochesPorVenta(Venta venta) {
+        Double total = 0.0;
+        List<Coche> coches = cocheRepository.findCochesByVenta(venta);
+        for (int i = 0; i < coches.size(); i++) {
+            total += coches.get(i).getPrecio();
+        }
+        return total;
     }
 }

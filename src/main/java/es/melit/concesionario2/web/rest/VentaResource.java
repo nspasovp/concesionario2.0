@@ -75,6 +75,10 @@ public class VentaResource {
         }
         Venta result = ventaService.save(venta);
         cocheService.cocheVendido(result, cocheId);
+        ventaService.calculateComision(result);
+        result.setNumeroCoches(getNumCochesPorVenta(result.getId()));
+        result = ventaService.save(result);
+
         return ResponseEntity
             .created(new URI("/api/ventas/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
@@ -106,7 +110,12 @@ public class VentaResource {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }
 
+        //ventaService.actualizarVentaNullCoches(venta);
         Venta result = ventaService.save(venta);
+        //Optional<Coche> coche = cocheService.findOne(id);
+        //Coche c=coche.get();
+        //c.setVenta(result.id(id));
+
         return ResponseEntity
             .ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, venta.getId().toString()))

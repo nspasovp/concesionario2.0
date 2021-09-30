@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { VentaService } from 'app/entities/venta/service/venta.service';
 
 import { IVendedor } from '../vendedor.model';
 
@@ -10,7 +11,7 @@ import { IVendedor } from '../vendedor.model';
 export class VendedorDetailComponent implements OnInit {
   vendedor: IVendedor | null = null;
 
-  constructor(protected activatedRoute: ActivatedRoute) {}
+  constructor(protected activatedRoute: ActivatedRoute, protected ventaService: VentaService) {}
 
   ngOnInit(): void {
     this.activatedRoute.data.subscribe(({ vendedor }) => {

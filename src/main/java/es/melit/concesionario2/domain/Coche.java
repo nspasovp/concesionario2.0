@@ -103,7 +103,7 @@ public class Coche implements Serializable {
         this.venta = venta;
     }
 
-    public void setVenta2() {
+    public void setVentaToNull() {
         this.venta = null;
     }
 

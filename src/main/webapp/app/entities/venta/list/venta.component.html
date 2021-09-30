@@ -40,10 +40,6 @@
             <span jhiTranslate="concesionario2App.venta.fecha">Fecha</span>
             <fa-icon icon="sort"></fa-icon>
           </th>
-          <th scope="col" jhiSortBy="numeroCoches">
-            <span jhiTranslate="concesionario2App.venta.numeroCoches">Numero Coches</span>
-            <fa-icon icon="sort"></fa-icon>
-          </th>
           <th scope="col" jhiSortBy="vendedor.nombre">
             <span jhiTranslate="concesionario2App.venta.vendedor">Vendedor</span>
             <fa-icon icon="sort"></fa-icon>
@@ -66,15 +62,16 @@
             <a [routerLink]="['/venta', venta.id, 'view']">{{ venta.id }}</a>
           </td>
           <td>{{ venta.fecha | formatMediumDate }}</td>
-          <td>{{ venta.numeroCoches }}</td>
           <td>
             <div *ngIf="venta.vendedor">
-              <a [routerLink]="['/vendedor', venta.vendedor?.nombre, 'view']">{{ venta.vendedor?.nombre }}</a>
+              <a [routerLink]="['/vendedor', venta.vendedor?.nombre, 'view']"
+                >{{ venta.vendedor?.nombre }} {{ venta.vendedor?.primeriApellido }} {{ venta.vendedor?.segundoApellido }}</a
+              >
             </div>
           </td>
           <td>
             <div *ngIf="venta.comprador">
-              <a [routerLink]="['/comprador', venta.comprador?.nombre, 'view']">{{ venta.comprador?.nombre }}</a>
+              <a [routerLink]="['/comprador', venta.comprador?.nombre, 'view']">{{ venta.comprador?.nombre }} {{ venta.comprador?.dni }}</a>
             </div>
           </td>
 

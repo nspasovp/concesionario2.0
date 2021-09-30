@@ -48,8 +48,8 @@ export class VentaService {
       .pipe(map((res: EntityResponseType) => this.convertDateFromServer(res)));
   }
 
-  findNumCoches(id: number): Observable<EntityResponseType> {
-    return this.http.get<any>(`${this.resourceUrl}/numCoches/${id}`, { observe: 'response' }).pipe(map((res: EntityResponseType) => res));
+  findNumCoches(id: number): Observable<HttpResponse<number>> {
+    return this.http.get<number>(`${this.resourceUrl}/numCoches/${id}`, { observe: 'response' });
   }
 
   query(req?: any): Observable<EntityArrayResponseType> {

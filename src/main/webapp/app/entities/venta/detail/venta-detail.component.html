@@ -17,23 +17,37 @@
         <dt><span jhiTranslate="concesionario2App.venta.fecha">Fecha</span></dt>
         <dd>
           <span>{{ venta.fecha | formatMediumDate }}</span>
-        </dd>
+          <!---- </dd>
         <dt><span jhiTranslate="concesionario2App.venta.numeroCoches">Numero Coches</span></dt>
         <dd>
           <span>{{ venta.numeroCoches }}</span>
+        </dd>-->
         </dd>
+
         <dt><span jhiTranslate="concesionario2App.venta.vendedor">Vendedor</span></dt>
         <dd>
           <div *ngIf="venta.vendedor">
-            <a [routerLink]="['/vendedor', venta.vendedor?.id, 'view']">{{ venta.vendedor?.id }}</a>
+            <a [routerLink]="['/vendedor', venta.vendedor?.id, 'view']"
+              >{{ venta.vendedor?.nombre }} {{ venta.vendedor?.primeriApellido }}</a
+            >
           </div>
         </dd>
         <dt><span jhiTranslate="concesionario2App.venta.comprador">Comprador</span></dt>
         <dd>
           <div *ngIf="venta.comprador">
-            <a [routerLink]="['/comprador', venta.comprador?.id, 'view']">{{ venta.comprador?.id }}</a>
+            <a [routerLink]="['/comprador', venta.comprador?.id, 'view']"
+              >{{ venta.comprador?.nombre }} {{ venta.comprador?.primerApellido }}</a
+            >
           </div>
         </dd>
+
+        <dt><span jhiTranslate="concesionario2App.venta.numeroCoches">Coches en esta Venta</span></dt>
+        <dd>
+          <div *ngIf="venta.numeroCoches">
+            <a [routerLink]="['/numeroCoches', venta.numeroCoches, 'view']">{{ venta.numeroCoches }}</a>
+          </div>
+        </dd>
+
         <dt><span jhiTranslate="concesionario2App.venta.numFactura">Numero Factura</span></dt>
         <dd>
           <div *ngIf="venta.numFactura">
