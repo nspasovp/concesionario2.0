@@ -1,6 +1,7 @@
 package es.melit.concesionario2.web.rest;
 
 import es.melit.concesionario2.domain.Coche;
+import es.melit.concesionario2.domain.Venta;
 import es.melit.concesionario2.repository.CocheRepository;
 import es.melit.concesionario2.service.CocheService;
 import es.melit.concesionario2.web.rest.errors.BadRequestAlertException;
@@ -92,6 +93,10 @@ public class CocheResource {
         if (!cocheRepository.existsById(id)) {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }
+        //Se guarda el coche a traves del ID para no perder la venta al editar el coche
+        Optional<Coche> c = cocheService.findOne(id);
+        Venta venta = c.get().getVenta();
+        coche.setVenta(venta);
 
         Coche result = cocheService.save(coche);
         return ResponseEntity

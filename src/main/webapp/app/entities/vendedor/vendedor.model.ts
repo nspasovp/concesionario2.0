@@ -9,6 +9,7 @@ export interface IVendedor {
   fechaNacimiento?: dayjs.Dayjs;
   fechaContratacion?: dayjs.Dayjs;
   fechaBaja?: dayjs.Dayjs | null;
+  comision?: number | null;
 }
 
 export class Vendedor implements IVendedor {
@@ -20,7 +21,8 @@ export class Vendedor implements IVendedor {
     public segundoApellido?: string | null,
     public fechaNacimiento?: dayjs.Dayjs,
     public fechaContratacion?: dayjs.Dayjs,
-    public fechaBaja?: dayjs.Dayjs | null
+    public fechaBaja?: dayjs.Dayjs | null,
+    public comision?: number | null
   ) {}
 }
 

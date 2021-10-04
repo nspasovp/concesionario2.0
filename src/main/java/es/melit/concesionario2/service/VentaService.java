@@ -1,7 +1,10 @@
 package es.melit.concesionario2.service;
 
+import es.melit.concesionario2.domain.Coche;
+import es.melit.concesionario2.domain.Vendedor;
 import es.melit.concesionario2.domain.Venta;
 import es.melit.concesionario2.repository.CocheRepository;
+import es.melit.concesionario2.repository.VendedorRepository;
 import es.melit.concesionario2.repository.VentaRepository;
 import es.melit.concesionario2.service.*;
 import java.util.List;
@@ -23,11 +26,20 @@ public class VentaService {
     private final Logger log = LoggerFactory.getLogger(VentaService.class);
 
     private final VentaRepository ventaRepository;
+    private final VendedorRepository vendedorRepository;
     private final CocheService cocheService;
+    private final CocheRepository cocheRepository;
 
-    public VentaService(VentaRepository ventaRepository, CocheService cocheService) {
+    public VentaService(
+        VentaRepository ventaRepository,
+        CocheService cocheService,
+        VendedorRepository vendedorRepository,
+        CocheRepository cocheRepository
+    ) {
         this.ventaRepository = ventaRepository;
         this.cocheService = cocheService;
+        this.vendedorRepository = vendedorRepository;
+        this.cocheRepository = cocheRepository;
     }
 
     /**
@@ -59,6 +71,9 @@ public class VentaService {
                     }
                     if (venta.getNumeroCoches() != null) {
                         existingVenta.setNumeroCoches(venta.getNumeroCoches());
+                    }
+                    if (venta.getNumFactura() != null) {
+                        existingVenta.setNumFactura(venta.getNumFactura());
                     }
 
                     return existingVenta;
@@ -99,5 +114,30 @@ public class VentaService {
     public void delete(Long id) {
         log.debug("Request to delete Venta : {}", id);
         ventaRepository.deleteById(id);
+    }
+
+    /**
+     * Calculate comision for vendedor  by venta.
+     *
+     * @param venta the Venta entity.
+     */
+    public void calculateComision(Venta venta) {
+        log.debug("Calculate comision", venta);
+        Vendedor vendedor = venta.getVendedor();
+        if (vendedor.getComision() == null) {
+            vendedor.setComision(0.0);
+        }
+        Double totalPrecio = cocheService.TotalPrecioCochesPorVenta(venta);
+        vendedor.setComision(vendedor.getComision() + (0.10 * totalPrecio));
+        vendedorRepository.save(vendedor);
+    }
+
+    public void actualizarVentaNullCoches(Venta venta) {
+        List<Coche> coches = cocheRepository.findCochesByVenta(venta);
+        if (!coches.isEmpty()) {
+            for (int i = 0; i < coches.size(); i++) {
+                coches.get(i).setVentaToNull();
+            }
+        }
     }
 }

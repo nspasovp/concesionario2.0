@@ -24,7 +24,8 @@
       "segundoApellido": "Segundo Apellido",
       "fechaNacimiento": "Fecha Nacimiento",
       "fechaContratacion": "Fecha Contratacion",
-      "fechaBaja": "Fecha Baja"
+      "fechaBaja": "Fecha Baja",
+      "comision": "Comisión"
     }
   }
 }

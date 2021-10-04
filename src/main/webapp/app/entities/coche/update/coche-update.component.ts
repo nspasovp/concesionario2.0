@@ -24,7 +24,6 @@ export class CocheUpdateComponent implements OnInit {
     marca: [null, [Validators.required]],
     modelo: [null, [Validators.required]],
     precio: [null, [Validators.required]],
-    venta: [],
   });
 
   constructor(
@@ -85,7 +84,6 @@ export class CocheUpdateComponent implements OnInit {
       marca: coche.marca,
       modelo: coche.modelo,
       precio: coche.precio,
-      venta: coche.venta,
     });
 
     this.ventasSharedCollection = this.ventaService.addVentaToCollectionIfMissing(this.ventasSharedCollection, coche.venta);
@@ -106,7 +104,6 @@ export class CocheUpdateComponent implements OnInit {
       marca: this.editForm.get(['marca'])!.value,
       modelo: this.editForm.get(['modelo'])!.value,
       precio: this.editForm.get(['precio'])!.value,
-      venta: this.editForm.get(['venta'])!.value,
     };
   }
 }

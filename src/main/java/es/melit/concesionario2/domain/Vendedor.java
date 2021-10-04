@@ -48,6 +48,9 @@ public class Vendedor implements Serializable {
     @Column(name = "fecha_baja")
     private LocalDate fechaBaja;
 
+    @Column(name = "comision", nullable = true)
+    private Double comision;
+
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
         return id;
@@ -151,6 +154,14 @@ public class Vendedor implements Serializable {
 
     public void setFechaBaja(LocalDate fechaBaja) {
         this.fechaBaja = fechaBaja;
+    }
+
+    public Double getComision() {
+        return comision;
+    }
+
+    public void setComision(Double comision) {
+        this.comision = comision;
     }
 
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here

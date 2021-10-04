@@ -20,7 +20,7 @@ export class VentaService {
 
   constructor(protected http: HttpClient, protected applicationConfigService: ApplicationConfigService) {}
 
-  create(venta: IVenta, coche: number): Observable<EntityResponseType> {
+  create(venta: IVenta, coche: string): Observable<EntityResponseType> {
     const copy = this.convertDateFromClient(venta);
 
     return this.http
@@ -28,10 +28,10 @@ export class VentaService {
       .pipe(map((res: EntityResponseType) => this.convertDateFromServer(res)));
   }
 
-  update(venta: IVenta): Observable<EntityResponseType> {
+  update(venta: IVenta, coche: string): Observable<EntityResponseType> {
     const copy = this.convertDateFromClient(venta);
     return this.http
-      .put<IVenta>(`${this.resourceUrl}/${getVentaIdentifier(venta) as number}`, copy, { observe: 'response' })
+      .put<IVenta>(`${this.resourceUrl}/update/${coche}`, copy, { observe: 'response' })
       .pipe(map((res: EntityResponseType) => this.convertDateFromServer(res)));
   }
 
@@ -46,6 +46,10 @@ export class VentaService {
     return this.http
       .get<IVenta>(`${this.resourceUrl}/${id}`, { observe: 'response' })
       .pipe(map((res: EntityResponseType) => this.convertDateFromServer(res)));
+  }
+
+  findNumCoches(id: number): Observable<HttpResponse<number>> {
+    return this.http.get<number>(`${this.resourceUrl}/numCoches/${id}`, { observe: 'response' });
   }
 
   query(req?: any): Observable<EntityArrayResponseType> {

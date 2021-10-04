@@ -9,6 +9,7 @@ import es.melit.concesionario2.service.VentaService;
 import es.melit.concesionario2.web.rest.errors.BadRequestAlertException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -17,6 +18,7 @@ import javax.validation.constraints.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.configurationprocessor.json.JSONException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
@@ -62,10 +64,11 @@ public class VentaResource {
      * @param venta the venta to create.
      * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new venta, or with status {@code 400 (Bad Request)} if the venta has already an ID.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
+     * @throws JSONException
      */
     @PostMapping("/ventas/{cocheId}")
-    public ResponseEntity<Venta> createVenta(@Valid @RequestBody Venta venta, @PathVariable(value = "cocheId") final Long cocheId)
-        throws URISyntaxException {
+    public ResponseEntity<Venta> createVenta(@Valid @RequestBody Venta venta, @PathVariable(value = "cocheId") final String cocheId)
+        throws URISyntaxException, JSONException {
         log.debug("REST request to save Venta : {} cocheId {}", venta, cocheId);
 
         if (venta.getId() != null) {
@@ -73,6 +76,9 @@ public class VentaResource {
         }
         Venta result = ventaService.save(venta);
         cocheService.cocheVendido(result, cocheId);
+        ventaService.calculateComision(result);
+        result.setNumeroCoches(getNumCochesPorVenta(result.getId()));
+        result = ventaService.save(result);
 
         return ResponseEntity
             .created(new URI("/api/ventas/" + result.getId()))
@@ -90,22 +96,27 @@ public class VentaResource {
      * or with status {@code 500 (Internal Server Error)} if the venta couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PutMapping("/ventas/{id}")
-    public ResponseEntity<Venta> updateVenta(@PathVariable(value = "id", required = false) final Long id, @Valid @RequestBody Venta venta)
-        throws URISyntaxException {
-        log.debug("REST request to update Venta : {}, {}", id, venta);
+    @PutMapping("/ventas/update/{cocheId}")
+    public ResponseEntity<Venta> updateVenta(@Valid @RequestBody Venta venta, @PathVariable(value = "cocheId") final String cocheId)
+        throws URISyntaxException, JSONException {
+        log.debug("REST request to update Venta : {}, {}", cocheId, venta);
         if (venta.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        if (!Objects.equals(id, venta.getId())) {
+
+        /*if (!Objects.equals(id, venta.getId())) {
             throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
-        }
+        }*/
 
-        if (!ventaRepository.existsById(id)) {
+        /*if (!ventaRepository.existsById(id)) {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
-        }
+        }*/
 
+        ventaService.actualizarVentaNullCoches(venta);
         Venta result = ventaService.save(venta);
+        cocheService.cocheVendido(result, cocheId);
+        ventaService.save(result);
+
         return ResponseEntity
             .ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, venta.getId().toString()))
@@ -175,21 +186,31 @@ public class VentaResource {
         return ResponseUtil.wrapOrNotFound(venta);
     }
 
+    @GetMapping("/ventas/numCoches/{id}")
+    public int getNumCochesPorVenta(@PathVariable Long id) {
+        log.debug("REST request to get Venta : {}", id);
+        int numCoches = cocheService.numeroCochesPorVenta(id);
+        return numCoches;
+    }
+
     /**
      * {@code DELETE  /ventas/:id} : delete the "id" venta.
      *
      * @param id the id of the venta to delete.
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
-    @DeleteMapping("/ventas/{id}")
-    public ResponseEntity<Void> deleteVenta(@PathVariable Long id) {
-        log.debug("REST request to delete Venta : {}", id);
-        Optional<Venta> venta = ventaService.findOne(id);
-        cocheService.deleteVenta(venta.get());
-        ventaService.delete(id);
+    @DeleteMapping("/ventas/{cocheId}")
+    public ResponseEntity<Void> deleteVenta(@PathVariable Long cocheId) {
+        log.debug("REST request to delete Venta : {}", cocheId);
+        //Obtenemos la venta a traves del id
+        Optional<Venta> venta = ventaService.findOne(cocheId);
+        //Se borra la venta que tenga un coche asignado
+        cocheService.deleteVentaFromCoche(venta.get());
+        //Borra la venta sin coche asignado
+        ventaService.delete(cocheId);
         return ResponseEntity
             .noContent()
-            .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString()))
+            .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, cocheId.toString()))
             .build();
     }
 }

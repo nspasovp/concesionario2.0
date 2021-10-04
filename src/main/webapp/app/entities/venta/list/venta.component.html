@@ -9,6 +9,7 @@
       </button>
 
       <button
+        *jhiHasAnyAuthority="['ROLE_ADMIN', 'ROLE_VENDEDOR']"
         id="jh-create-entity"
         data-cy="entityCreateButton"
         class="btn btn-primary jh-create-entity create-venta"
@@ -40,15 +41,11 @@
             <span jhiTranslate="concesionario2App.venta.fecha">Fecha</span>
             <fa-icon icon="sort"></fa-icon>
           </th>
-          <th scope="col" jhiSortBy="numeroCoches">
-            <span jhiTranslate="concesionario2App.venta.numeroCoches">Numero Coches</span>
-            <fa-icon icon="sort"></fa-icon>
-          </th>
-          <th scope="col" jhiSortBy="vendedor.id">
+          <th scope="col" jhiSortBy="vendedor.nombre">
             <span jhiTranslate="concesionario2App.venta.vendedor">Vendedor</span>
             <fa-icon icon="sort"></fa-icon>
           </th>
-          <th scope="col" jhiSortBy="comprador.id">
+          <th scope="col" jhiSortBy="comprador.nombre">
             <span jhiTranslate="concesionario2App.venta.comprador">Comprador</span>
             <fa-icon icon="sort"></fa-icon>
           </th>
@@ -66,15 +63,16 @@
             <a [routerLink]="['/venta', venta.id, 'view']">{{ venta.id }}</a>
           </td>
           <td>{{ venta.fecha | formatMediumDate }}</td>
-          <td>{{ venta.numeroCoches }}</td>
           <td>
             <div *ngIf="venta.vendedor">
-              <a [routerLink]="['/vendedor', venta.vendedor?.id, 'view']">{{ venta.vendedor?.id }}</a>
+              <a [routerLink]="['/vendedor', venta.vendedor?.nombre, 'view']"
+                >{{ venta.vendedor?.nombre }} {{ venta.vendedor?.primeriApellido }} {{ venta.vendedor?.segundoApellido }}</a
+              >
             </div>
           </td>
           <td>
             <div *ngIf="venta.comprador">
-              <a [routerLink]="['/comprador', venta.comprador?.id, 'view']">{{ venta.comprador?.id }}</a>
+              <a [routerLink]="['/comprador', venta.comprador?.nombre, 'view']">{{ venta.comprador?.nombre }} {{ venta.comprador?.dni }}</a>
             </div>
           </td>
 
@@ -91,12 +89,24 @@
                 <span class="d-none d-md-inline" jhiTranslate="entity.action.view">View</span>
               </button>
 
-              <button type="submit" [routerLink]="['/venta', venta.id, 'edit']" class="btn btn-primary btn-sm" data-cy="entityEditButton">
+              <button
+                *jhiHasAnyAuthority="['ROLE_ADMIN']"
+                type="submit"
+                [routerLink]="['/venta', venta.id, 'edit']"
+                class="btn btn-primary btn-sm"
+                data-cy="entityEditButton"
+              >
                 <fa-icon icon="pencil-alt"></fa-icon>
                 <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>
               </button>
 
-              <button type="submit" (click)="delete(venta)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
+              <button
+                *jhiHasAnyAuthority="['ROLE_ADMIN']"
+                type="submit"
+                (click)="delete(venta)"
+                class="btn btn-danger btn-sm"
+                data-cy="entityDeleteButton"
+              >
                 <fa-icon icon="times"></fa-icon>
                 <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Delete</span>
               </button>

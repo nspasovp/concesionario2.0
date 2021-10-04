@@ -9,6 +9,7 @@ import { IVendedor } from '../vendedor.model';
 import { ASC, DESC, ITEMS_PER_PAGE, SORT } from 'app/config/pagination.constants';
 import { VendedorService } from '../service/vendedor.service';
 import { VendedorDeleteDialogComponent } from '../delete/vendedor-delete-dialog.component';
+import { Authority } from 'app/config/authority.constants';
 
 @Component({
   selector: 'jhi-vendedor',
