@@ -42,9 +42,8 @@
         <dd>
           <span>{{ vendedor.fechaBaja | formatMediumDate }}</span>
         </dd>
-
-        <dt><span jhiTranslate="concesionario2App.vendedor.comision">Comision</span></dt>
-        <dd>
+        <dt *jhiHasAnyAuthority="['ROLE_ADMIN']"><span jhiTranslate="concesionario2App.vendedor.comision">Comision</span></dt>
+        <dd *jhiHasAnyAuthority="['ROLE_ADMIN']">
           <span>{{ vendedor.comision }}</span>
         </dd>
       </dl>

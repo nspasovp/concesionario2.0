@@ -124,6 +124,9 @@ public class VentaService {
     public void calculateComision(Venta venta) {
         log.debug("Calculate comision", venta);
         Vendedor vendedor = venta.getVendedor();
+        if (vendedor.getComision() == null) {
+            vendedor.setComision(0.0);
+        }
         Double totalPrecio = cocheService.TotalPrecioCochesPorVenta(venta);
         vendedor.setComision(vendedor.getComision() + (0.10 * totalPrecio));
         vendedorRepository.save(vendedor);
