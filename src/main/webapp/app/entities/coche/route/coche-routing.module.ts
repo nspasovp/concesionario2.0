@@ -6,6 +6,7 @@ import { CocheComponent } from '../list/coche.component';
 import { CocheDetailComponent } from '../detail/coche-detail.component';
 import { CocheUpdateComponent } from '../update/coche-update.component';
 import { CocheRoutingResolveService } from './coche-routing-resolve.service';
+import { Authority } from 'app/config/authority.constants';
 
 const cocheRoute: Routes = [
   {
@@ -13,6 +14,7 @@ const cocheRoute: Routes = [
     component: CocheComponent,
     data: {
       defaultSort: 'id,asc',
+      authority: [Authority.ADMIN, Authority.COMPRADOR, Authority.VENDEDOR],
     },
     canActivate: [UserRouteAccessService],
   },
@@ -22,6 +24,9 @@ const cocheRoute: Routes = [
     resolve: {
       coche: CocheRoutingResolveService,
     },
+    data: {
+      authority: [Authority.ADMIN, Authority.COMPRADOR, Authority.VENDEDOR],
+    },
     canActivate: [UserRouteAccessService],
   },
   {
@@ -30,6 +35,9 @@ const cocheRoute: Routes = [
     resolve: {
       coche: CocheRoutingResolveService,
     },
+    data: {
+      authority: [Authority.ADMIN],
+    },
     canActivate: [UserRouteAccessService],
   },
   {
@@ -37,6 +45,9 @@ const cocheRoute: Routes = [
     component: CocheUpdateComponent,
     resolve: {
       coche: CocheRoutingResolveService,
+    },
+    data: {
+      authority: [Authority.ADMIN],
     },
     canActivate: [UserRouteAccessService],
   },
