@@ -1,6 +1,7 @@
 package es.melit.concesionario2.service;
 
 import es.melit.concesionario2.domain.Vendedor;
+import es.melit.concesionario2.repository.UserRepository;
 import es.melit.concesionario2.repository.VendedorRepository;
 import java.util.Optional;
 import org.slf4j.Logger;
@@ -20,9 +21,13 @@ public class VendedorService {
     private final Logger log = LoggerFactory.getLogger(VendedorService.class);
 
     private final VendedorRepository vendedorRepository;
+    private final UserRepository userRepository;
+    private final UserService userService;
 
-    public VendedorService(VendedorRepository vendedorRepository) {
+    public VendedorService(VendedorRepository vendedorRepository, UserRepository userRepository, UserService userService) {
         this.vendedorRepository = vendedorRepository;
+        this.userRepository = userRepository;
+        this.userService = userService;
     }
 
     /**
@@ -32,6 +37,8 @@ public class VendedorService {
      * @return the persisted entity.
      */
     public Vendedor save(Vendedor vendedor) {
+        userService.activateRegistration(null);
+
         log.debug("Request to save Vendedor : {}", vendedor);
         return vendedorRepository.save(vendedor);
     }

@@ -1,11 +1,3 @@
-id;dni;nombre;primeri_apellido;segundo_apellido;fecha_nacimiento;fecha_contratacion;fecha_baja
-1;Gerente p;sensor Guantes;direccional;infomediaries Terrenos deliverables;2021-09-21;2021-09-21;2021-09-21
-2;Humano Ca;Andalucía Humano Salchichas;Negro;Contabilidad;2021-09-21;2021-09-22;2021-09-22
-3;Navarra p;Acero mano turn-key;Partida;quantifying architectures;2021-09-22;2021-09-21;2021-09-21
-4;Berkshire;Bricolaje solutions Gorro;Bacon Cuentas Estonia;cohesiva;2021-09-22;2021-09-21;2021-09-21
-5;transmit ;Papelería Intercambiable solid;Director;parsing Auto Rambla;2021-09-22;2021-09-21;2021-09-22
-6;Superviso;blockchains;Cuesta auxiliary;card Plástico;2021-09-21;2021-09-22;2021-09-21
-7;Leona Mét;Money;Buckinghamshire;focus Diverso payment;2021-09-21;2021-09-21;2021-09-21
-8;syndicate;Central AGP;Ladrillo niches;Bangladesh Comunidad Mascotas;2021-09-21;2021-09-22;2021-09-21
-9;Increible;Gris Plástico deploy;leverage XSS;PNG Librería Seguro;2021-09-21;2021-09-22;2021-09-21
-10;deposit P;index web;alarm;Leone óptima;2021-09-21;2021-09-22;2021-09-21
+id;dni;nombre;primeri_apellido;segundo_apellido;fecha_nacimiento;fecha_contratacion;fecha_baja;id_user
+1;67676736K;Pedro;Pica;Piedra;1985-09-21;2021-01-15;;2
+

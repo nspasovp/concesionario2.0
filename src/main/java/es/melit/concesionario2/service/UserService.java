@@ -4,7 +4,9 @@ import es.melit.concesionario2.config.Constants;
 import es.melit.concesionario2.domain.Authority;
 import es.melit.concesionario2.domain.User;
 import es.melit.concesionario2.repository.AuthorityRepository;
+import es.melit.concesionario2.repository.CompradorRepository;
 import es.melit.concesionario2.repository.UserRepository;
+import es.melit.concesionario2.repository.VendedorRepository;
 import es.melit.concesionario2.security.AuthoritiesConstants;
 import es.melit.concesionario2.security.SecurityUtils;
 import es.melit.concesionario2.service.dto.AdminUserDTO;
@@ -35,6 +37,10 @@ public class UserService {
 
     private final UserRepository userRepository;
 
+    private final VendedorRepository vendedorRepository;
+
+    private final CompradorRepository compradorRepository;
+
     private final PasswordEncoder passwordEncoder;
 
     private final AuthorityRepository authorityRepository;
@@ -43,11 +49,15 @@ public class UserService {
 
     public UserService(
         UserRepository userRepository,
+        CompradorRepository compradorRepository,
+        VendedorRepository vendedorRepository,
         PasswordEncoder passwordEncoder,
         AuthorityRepository authorityRepository,
         CacheManager cacheManager
     ) {
         this.userRepository = userRepository;
+        this.compradorRepository = compradorRepository;
+        this.vendedorRepository = vendedorRepository;
         this.passwordEncoder = passwordEncoder;
         this.authorityRepository = authorityRepository;
         this.cacheManager = cacheManager;
