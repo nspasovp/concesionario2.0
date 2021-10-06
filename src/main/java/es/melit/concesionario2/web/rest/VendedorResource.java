@@ -1,9 +1,11 @@
 package es.melit.concesionario2.web.rest;
 
+import es.melit.concesionario2.domain.Authority;
 import es.melit.concesionario2.domain.User;
 import es.melit.concesionario2.domain.Vendedor;
 import es.melit.concesionario2.repository.UserRepository;
 import es.melit.concesionario2.repository.VendedorRepository;
+import es.melit.concesionario2.security.AuthoritiesConstants;
 import es.melit.concesionario2.service.UserService;
 import es.melit.concesionario2.service.VendedorService;
 import es.melit.concesionario2.service.dto.AdminUserDTO;
@@ -14,6 +16,8 @@ import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
+import java.util.TreeSet;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import org.slf4j.Logger;
@@ -82,10 +86,14 @@ public class VendedorResource {
         User user = new User();
         user.setLogin(vendedor.getNombre());
         AdminUserDTO usuario = new AdminUserDTO(user);
+        Set<String> authorities = new TreeSet();
+        String rol = AuthoritiesConstants.VENDEDOR;
+        authorities.add(rol);
+        usuario.setAuthorities(authorities);
         User pepe = userService.createUser(usuario);
-
         Optional<User> ursuario = userRepository.findById(pepe.getId());
         vendedor.setIdUser(ursuario.get());
+
         Vendedor result = vendedorService.save(vendedor);
 
         return ResponseEntity
