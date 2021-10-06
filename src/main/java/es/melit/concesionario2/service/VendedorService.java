@@ -3,9 +3,11 @@ package es.melit.concesionario2.service;
 import es.melit.concesionario2.domain.Vendedor;
 import es.melit.concesionario2.repository.UserRepository;
 import es.melit.concesionario2.repository.VendedorRepository;
+import es.melit.concesionario2.service.dto.VendedorDTO;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.autoconfigure.security.SecurityProperties.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -37,8 +39,6 @@ public class VendedorService {
      * @return the persisted entity.
      */
     public Vendedor save(Vendedor vendedor) {
-        userService.activateRegistration(null);
-
         log.debug("Request to save Vendedor : {}", vendedor);
         return vendedorRepository.save(vendedor);
     }

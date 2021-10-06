@@ -1,8 +1,13 @@
 package es.melit.concesionario2.web.rest;
 
+import es.melit.concesionario2.domain.User;
 import es.melit.concesionario2.domain.Vendedor;
+import es.melit.concesionario2.repository.UserRepository;
 import es.melit.concesionario2.repository.VendedorRepository;
+import es.melit.concesionario2.service.UserService;
 import es.melit.concesionario2.service.VendedorService;
+import es.melit.concesionario2.service.dto.AdminUserDTO;
+import es.melit.concesionario2.service.dto.VendedorDTO;
 import es.melit.concesionario2.web.rest.errors.BadRequestAlertException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -40,12 +45,24 @@ public class VendedorResource {
     private String applicationName;
 
     private final VendedorService vendedorService;
+    private final UserService userService;
+    private final UserRepository userRepository;
+    private final UserResource userResource;
 
     private final VendedorRepository vendedorRepository;
 
-    public VendedorResource(VendedorService vendedorService, VendedorRepository vendedorRepository) {
+    public VendedorResource(
+        UserResource userResource,
+        VendedorService vendedorService,
+        VendedorRepository vendedorRepository,
+        UserService userService,
+        UserRepository userRepository
+    ) {
         this.vendedorService = vendedorService;
         this.vendedorRepository = vendedorRepository;
+        this.userService = userService;
+        this.userRepository = userRepository;
+        this.userResource = userResource;
     }
 
     /**
@@ -61,7 +78,16 @@ public class VendedorResource {
         if (vendedor.getId() != null) {
             throw new BadRequestAlertException("A new vendedor cannot already have an ID", ENTITY_NAME, "idexists");
         }
+
+        User user = new User();
+        user.setLogin(vendedor.getNombre());
+        AdminUserDTO usuario = new AdminUserDTO(user);
+        User pepe = userService.createUser(usuario);
+
+        Optional<User> ursuario = userRepository.findById(pepe.getId());
+        vendedor.setIdUser(ursuario.get());
         Vendedor result = vendedorService.save(vendedor);
+
         return ResponseEntity
             .created(new URI("/api/vendedors/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
@@ -94,7 +120,6 @@ public class VendedorResource {
         if (!vendedorRepository.existsById(id)) {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }
-
         Vendedor result = vendedorService.save(vendedor);
         return ResponseEntity
             .ok()
