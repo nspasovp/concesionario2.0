@@ -1,6 +1,7 @@
 package es.melit.concesionario2.web.rest;
 
 import es.melit.concesionario2.domain.Coche;
+import es.melit.concesionario2.domain.CocheSpec;
 import es.melit.concesionario2.domain.Venta;
 import es.melit.concesionario2.repository.CocheRepository;
 import es.melit.concesionario2.service.CocheService;
@@ -17,6 +18,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -161,6 +163,13 @@ public class CocheResource {
         List<Coche> cochesDisponibles = cocheService.findByVentaIsNull();
         //HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().body(cochesDisponibles);
+    }
+
+    @GetMapping("/cochesSpec")
+    public ResponseEntity<Specification<Coche>> getCochesSpecByModelo(String modelo) {
+        log.debug("REST request to get a page of Ventas");
+        Specification<Coche> cochesSpec = CocheSpec.equalModeloOfCoche(modelo);
+        return ResponseEntity.ok().body(cochesSpec);
     }
 
     /**

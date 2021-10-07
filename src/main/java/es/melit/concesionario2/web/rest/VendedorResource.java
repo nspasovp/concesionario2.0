@@ -9,8 +9,10 @@ import es.melit.concesionario2.security.AuthoritiesConstants;
 import es.melit.concesionario2.service.UserService;
 import es.melit.concesionario2.service.VendedorService;
 import es.melit.concesionario2.service.dto.AdminUserDTO;
+import es.melit.concesionario2.service.dto.PasswordChangeDTO;
 import es.melit.concesionario2.service.dto.VendedorDTO;
 import es.melit.concesionario2.web.rest.errors.BadRequestAlertException;
+import es.melit.concesionario2.web.rest.vm.KeyAndPasswordVM;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
@@ -83,16 +85,17 @@ public class VendedorResource {
             throw new BadRequestAlertException("A new vendedor cannot already have an ID", ENTITY_NAME, "idexists");
         }
 
-        User user = new User();
-        user.setLogin(vendedor.getNombre());
-        AdminUserDTO usuario = new AdminUserDTO(user);
+        User u = new User();
+        u.setLogin(vendedor.getNombre());
+        AdminUserDTO usuario = new AdminUserDTO(u);
         Set<String> authorities = new TreeSet();
         String rol = AuthoritiesConstants.VENDEDOR;
         authorities.add(rol);
         usuario.setAuthorities(authorities);
-        User pepe = userService.createUser(usuario);
-        Optional<User> ursuario = userRepository.findById(pepe.getId());
-        vendedor.setIdUser(ursuario.get());
+        User user = userService.createUser(usuario);
+        user.setPassword(vendedor.getNombre().toLowerCase());
+        Optional<User> x = userRepository.findById(user.getId());
+        vendedor.setIdUser(x.get());
 
         Vendedor result = vendedorService.save(vendedor);
 

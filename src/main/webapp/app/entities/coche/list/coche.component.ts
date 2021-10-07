@@ -24,6 +24,7 @@ export class CocheComponent implements OnInit {
   predicate!: string;
   ascending!: boolean;
   ngbPaginationPage = 1;
+  textoDeInput?: string;
 
   constructor(
     protected ventaService: VentaService,
@@ -59,7 +60,7 @@ export class CocheComponent implements OnInit {
     this.handleNavigation();
   }
 
-  trackId(index: number, item: ICoche): number {
+  trackId(_index: number, item: ICoche): number {
     return item.id!;
   }
 
