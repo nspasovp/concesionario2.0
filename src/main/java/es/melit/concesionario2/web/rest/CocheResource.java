@@ -4,6 +4,7 @@ import es.melit.concesionario2.domain.Coche;
 import es.melit.concesionario2.domain.CocheSpec;
 import es.melit.concesionario2.domain.Venta;
 import es.melit.concesionario2.repository.CocheRepository;
+import es.melit.concesionario2.service.CocheCriteria;
 import es.melit.concesionario2.service.CocheService;
 import es.melit.concesionario2.web.rest.errors.BadRequestAlertException;
 import java.net.URI;
@@ -150,11 +151,19 @@ public class CocheResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of coches in body.
      */
     @GetMapping("/coches")
-    public ResponseEntity<List<Coche>> getAllCoches(Pageable pageable) {
+    public ResponseEntity<List<Coche>> getAllCoches(CocheCriteria coche, Pageable pageable) {
         log.debug("REST request to get a page of Coches");
-        Page<Coche> page = cocheService.findAll(pageable);
+        log.debug("TEST {}", coche.getMarca());
+        //if(coche.getMarca()!=null){
+        Page<Coche> page = cocheRepository.findAll(CocheSpec.buscarCoches(coche), pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
+        //}else{
+
+        /*Page<Coche> page = cocheService.findAll(pageable);
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
+        return ResponseEntity.ok().headers(headers).body(page.getContent());
+        }*/
     }
 
     @GetMapping("/cochesD")
@@ -163,13 +172,6 @@ public class CocheResource {
         List<Coche> cochesDisponibles = cocheService.findByVentaIsNull();
         //HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().body(cochesDisponibles);
-    }
-
-    @GetMapping("/cochesSpec")
-    public ResponseEntity<Specification<Coche>> getCochesSpecByModelo(String modelo) {
-        log.debug("REST request to get a page of Ventas");
-        Specification<Coche> cochesSpec = CocheSpec.equalModeloOfCoche(modelo);
-        return ResponseEntity.ok().body(cochesSpec);
     }
 
     /**

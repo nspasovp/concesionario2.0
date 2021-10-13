@@ -1,77 +1,57 @@
 package es.melit.concesionario2.domain;
 
+import com.fasterxml.jackson.databind.introspect.TypeResolutionContext.Empty;
+import es.melit.concesionario2.service.CocheCriteria;
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.*;
+import org.hibernate.query.criteria.internal.predicate.IsEmptyPredicate;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 public class CocheSpec {
 
-    private static EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("example-unit");
-
-    private static void findAllCoches() {
-        System.out.println("-- All coches --");
-        EntityManager em = entityManagerFactory.createEntityManager();
-        CriteriaBuilder cb = em.getCriteriaBuilder();
-        CriteriaQuery<Coche> query = cb.createQuery(Coche.class); //create query object
-        Root<Coche> cocheRoot = query.from(Coche.class); //get object representing 'from' part
-        query.select(cocheRoot); //linking 'select' and 'from' parts, equivalent to 'select t from Coche t;'
-        TypedQuery<Coche> typedQuery = em.createQuery(query);
-        typedQuery.getResultList().forEach(System.out::println);
-        em.close();
+    public static Specification<Coche> marcaLike(String name) {
+        return (root, query, criteriaBuilder) -> criteriaBuilder.like(root.get(Coche_.MARCA), name + "%");
     }
 
-    private static void findAstras() {
-        System.out.println("-- All employees with 'Astra' modelo --");
-        EntityManager em = entityManagerFactory.createEntityManager();
-        CriteriaBuilder cb = em.getCriteriaBuilder();
-        CriteriaQuery<Coche> query = cb.createQuery(Coche.class);
-        Root<Coche> Coche = query.from(Coche.class);
-        query.select(Coche).where(cb.equal(Coche.get("modelo"), "Astra"));
-        TypedQuery<Coche> typedQuery = em.createQuery(query);
-        typedQuery.getResultList().forEach(System.out::println);
-        em.close();
+    public static Specification<Coche> modeloLike(String name) {
+        return (root, query, criteriaBuilder) -> criteriaBuilder.like(root.get(Coche_.MODELO), name + "%");
     }
 
-    public static Specification<Coche> equalModeloOfCoche(String modelo) {
-        if (modelo == null) {
-            return null;
+    public static Specification<Coche> buscarCoches(CocheCriteria coche) {
+        Specification<Coche> x = Specification.where(null);
+        //coche.arreglarArray(coche.getMarca());
+        if (coche.getLong() >= 1) {
+            if (coche.getArray(0) != null) {
+                x = x.and(marcaLike(coche.getArray(0)).or(modeloLike(coche.getArray(0))));
+                //.or(precioLike(coche.getArray(0))));
+            }
+            if (coche.getLong() > 1) {
+                x = x.and(modeloLike(coche.getArray(1)));
+            }
         }
-        return (root, query, cb) -> {
-            return cb.equal(root.get(Coche_.MODELO), modelo);
-        };
-    }
 
-    /*public static Specification<Coche> getCochesByNameSpec(String modelo) {
+        return x;
+    }
+    /*public static Specification<Coche> getCochesByNameSpec(CocheCriteria coche) {
         return new Specification<Coche>() {
-            @Override
             public Predicate toPredicate(Root<Coche> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
-                query.select(Coche).where();
-                Predicate equalPredicate = criteriaBuilder.equal(root.get(Coche_.modelo), modelo);
-                return equalPredicate;
+                List<Predicate> ors = new ArrayList<Predicate>();
+                Expression<String> marca = root.get("marca").as(String.class);
+                Expression<String> modelo = root.get("modelo").as(String.class);
+
+                List<Predicate> predicates = new ArrayList<Predicate>();
+                predicates.add(criteriaBuilder.like(marca, "%" + coche.getMarca() + "%"));
+                ors.add(criteriaBuilder.or(predicates.toArray(new Predicate[] {})));
+                Predicate result = criteriaBuilder.or(ors.toArray(new Predicate[] {}));
+                return result;
             }
         };
     }*/
 
-    public static Specification<Coche> getCochesByPrecioSpec(Double precio) {
-        return new Specification<Coche>() {
-            @Override
-            public Predicate toPredicate(Root<Coche> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
-                Predicate equalPredicate = criteriaBuilder.equal(root.get(Coche_.precio), precio);
-                return equalPredicate;
-            }
-        };
-    }
-    /*
-     * public static Specification<Coche> getCochesByModeloTypeSpec(Long precio) {
-     * return new Specification<Coche>() {
-     *
-     * @Override public Predicate toPredicate(Root<Coche> root, CriteriaQuery<?>
-     * query, CriteriaBuilder criteriaBuilder) { ListJoin<Coche, marca> phoneJoin =
-     * root.join(Coche.marca); Predicate equalPredicate =
-     * criteriaBuilder.equal(phoneJoin.get(Phone_.type), phoneType); return
-     * equalPredicate; } }; }
-     */
 }
