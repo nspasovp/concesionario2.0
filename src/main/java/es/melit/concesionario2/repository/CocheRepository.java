@@ -6,6 +6,8 @@ import es.melit.concesionario2.repository.VentaRepository;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.*;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
@@ -13,7 +15,7 @@ import org.springframework.stereotype.Repository;
  * Spring Data SQL repository for the Coche entity.
  */
 @Repository
-public interface CocheRepository extends JpaRepository<Coche, Long> {
+public interface CocheRepository extends JpaRepository<Coche, Long>, JpaSpecificationExecutor<Coche> {
     List<Coche> findByVentaIsNull();
 
     Optional<Coche> findCocheByVenta(Venta venta);

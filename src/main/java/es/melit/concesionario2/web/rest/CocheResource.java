@@ -1,8 +1,10 @@
 package es.melit.concesionario2.web.rest;
 
 import es.melit.concesionario2.domain.Coche;
+import es.melit.concesionario2.domain.CocheSpec;
 import es.melit.concesionario2.domain.Venta;
 import es.melit.concesionario2.repository.CocheRepository;
+import es.melit.concesionario2.service.CocheCriteria;
 import es.melit.concesionario2.service.CocheService;
 import es.melit.concesionario2.web.rest.errors.BadRequestAlertException;
 import java.net.URI;
@@ -17,6 +19,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -148,11 +151,19 @@ public class CocheResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of coches in body.
      */
     @GetMapping("/coches")
-    public ResponseEntity<List<Coche>> getAllCoches(Pageable pageable) {
+    public ResponseEntity<List<Coche>> getAllCoches(CocheCriteria coche, Pageable pageable) {
         log.debug("REST request to get a page of Coches");
-        Page<Coche> page = cocheService.findAll(pageable);
+        log.debug("TEST {}", coche.getMarca());
+        //if(coche.getMarca()!=null){
+        Page<Coche> page = cocheRepository.findAll(CocheSpec.buscarCoches(coche), pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
+        //}else{
+
+        /*Page<Coche> page = cocheService.findAll(pageable);
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
+        return ResponseEntity.ok().headers(headers).body(page.getContent());
+        }*/
     }
 
     @GetMapping("/cochesD")

@@ -4,11 +4,14 @@ import es.melit.concesionario2.config.Constants;
 import es.melit.concesionario2.domain.Authority;
 import es.melit.concesionario2.domain.User;
 import es.melit.concesionario2.repository.AuthorityRepository;
+import es.melit.concesionario2.repository.CompradorRepository;
 import es.melit.concesionario2.repository.UserRepository;
+import es.melit.concesionario2.repository.VendedorRepository;
 import es.melit.concesionario2.security.AuthoritiesConstants;
 import es.melit.concesionario2.security.SecurityUtils;
 import es.melit.concesionario2.service.dto.AdminUserDTO;
 import es.melit.concesionario2.service.dto.UserDTO;
+import es.melit.concesionario2.service.dto.VendedorDTO;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
@@ -35,6 +38,10 @@ public class UserService {
 
     private final UserRepository userRepository;
 
+    private final VendedorRepository vendedorRepository;
+
+    private final CompradorRepository compradorRepository;
+
     private final PasswordEncoder passwordEncoder;
 
     private final AuthorityRepository authorityRepository;
@@ -43,11 +50,15 @@ public class UserService {
 
     public UserService(
         UserRepository userRepository,
+        CompradorRepository compradorRepository,
+        VendedorRepository vendedorRepository,
         PasswordEncoder passwordEncoder,
         AuthorityRepository authorityRepository,
         CacheManager cacheManager
     ) {
         this.userRepository = userRepository;
+        this.compradorRepository = compradorRepository;
+        this.vendedorRepository = vendedorRepository;
         this.passwordEncoder = passwordEncoder;
         this.authorityRepository = authorityRepository;
         this.cacheManager = cacheManager;
@@ -184,6 +195,33 @@ public class UserService {
                 .collect(Collectors.toSet());
             user.setAuthorities(authorities);
         }
+        userRepository.save(user);
+        this.clearUserCaches(user);
+        log.debug("Created Information for User: {}", user);
+        return user;
+    }
+
+    public User createUserFromVendedor(VendedorDTO vendedorDTO, User user) {
+        if (vendedorDTO.getLogin() != null) {
+            user.setLogin(vendedorDTO.getLogin().toLowerCase());
+        }
+        user.setFirstName(vendedorDTO.getNombre());
+        user.setLastName(vendedorDTO.getSegundoApellido());
+        if (vendedorDTO.getEmail() != null) {
+            user.setEmail(vendedorDTO.getEmail().toLowerCase());
+        }
+        user.setEmail(vendedorDTO.getNombre() + "@hola.es");
+        user.setImageUrl(vendedorDTO.getImageUrl());
+        if (vendedorDTO.getLangKey() == null) {
+            user.setLangKey(Constants.DEFAULT_LANGUAGE); // default language
+        } else {
+            user.setLangKey(vendedorDTO.getLangKey());
+        }
+        String encryptedPassword = passwordEncoder.encode(RandomUtil.generatePassword());
+        user.setPassword(encryptedPassword);
+        user.setResetKey(RandomUtil.generateResetKey());
+        user.setResetDate(Instant.now());
+        user.setActivated(true);
         userRepository.save(user);
         this.clearUserCaches(user);
         log.debug("Created Information for User: {}", user);

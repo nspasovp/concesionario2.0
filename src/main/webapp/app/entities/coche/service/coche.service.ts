@@ -45,6 +45,10 @@ export class CocheService {
     const options = createRequestOption(req);
     return this.http.get<ICoche[]>(this.resourceUrl + 'D', { params: options, observe: 'response' });
   }
+  querySpec(req?: any): Observable<EntityArrayResponseType> {
+    const options = createRequestOption(req);
+    return this.http.get<ICoche[]>(this.resourceUrl + 'Spec', { params: options, observe: 'response' });
+  }
 
   delete(id: number): Observable<HttpResponse<{}>> {
     return this.http.delete(`${this.resourceUrl}/${id}`, { observe: 'response' });

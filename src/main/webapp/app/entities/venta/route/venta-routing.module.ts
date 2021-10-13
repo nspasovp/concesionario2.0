@@ -6,6 +6,7 @@ import { VentaComponent } from '../list/venta.component';
 import { VentaDetailComponent } from '../detail/venta-detail.component';
 import { VentaUpdateComponent } from '../update/venta-update.component';
 import { VentaRoutingResolveService } from './venta-routing-resolve.service';
+import { Authority } from 'app/config/authority.constants';
 
 const ventaRoute: Routes = [
   {
@@ -13,6 +14,7 @@ const ventaRoute: Routes = [
     component: VentaComponent,
     data: {
       defaultSort: 'id,asc',
+      authority: [Authority.ADMIN, Authority.VENDEDOR],
     },
     canActivate: [UserRouteAccessService],
   },
@@ -22,6 +24,9 @@ const ventaRoute: Routes = [
     resolve: {
       venta: VentaRoutingResolveService,
     },
+    data: {
+      authority: [Authority.ADMIN],
+    },
     canActivate: [UserRouteAccessService],
   },
   {
@@ -30,6 +35,9 @@ const ventaRoute: Routes = [
     resolve: {
       venta: VentaRoutingResolveService,
     },
+    data: {
+      authority: [Authority.ADMIN, Authority.VENDEDOR],
+    },
     canActivate: [UserRouteAccessService],
   },
   {
@@ -37,6 +45,9 @@ const ventaRoute: Routes = [
     component: VentaUpdateComponent,
     resolve: {
       venta: VentaRoutingResolveService,
+    },
+    data: {
+      authority: [Authority.ADMIN, Authority.VENDEDOR],
     },
     canActivate: [UserRouteAccessService],
   },

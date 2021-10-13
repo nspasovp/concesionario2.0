@@ -51,6 +51,10 @@ public class Vendedor implements Serializable {
     @Column(name = "comision", nullable = true)
     private Double comision;
 
+    @OneToOne
+    @JoinColumn(name = "id_user")
+    private User user;
+
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
         return id;
@@ -162,6 +166,14 @@ public class Vendedor implements Serializable {
 
     public void setComision(Double comision) {
         this.comision = comision;
+    }
+
+    public User getIdUser() {
+        return user;
+    }
+
+    public void setIdUser(User idUser) {
+        this.user = idUser;
     }
 
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here

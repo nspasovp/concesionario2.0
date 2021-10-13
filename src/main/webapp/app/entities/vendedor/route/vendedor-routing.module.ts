@@ -6,6 +6,7 @@ import { VendedorComponent } from '../list/vendedor.component';
 import { VendedorDetailComponent } from '../detail/vendedor-detail.component';
 import { VendedorUpdateComponent } from '../update/vendedor-update.component';
 import { VendedorRoutingResolveService } from './vendedor-routing-resolve.service';
+import { Authority } from 'app/config/authority.constants';
 
 const vendedorRoute: Routes = [
   {
@@ -13,6 +14,7 @@ const vendedorRoute: Routes = [
     component: VendedorComponent,
     data: {
       defaultSort: 'id,asc',
+      authority: [Authority.ADMIN, Authority.VENDEDOR],
     },
     canActivate: [UserRouteAccessService],
   },
@@ -22,6 +24,9 @@ const vendedorRoute: Routes = [
     resolve: {
       vendedor: VendedorRoutingResolveService,
     },
+    data: {
+      authority: [Authority.ADMIN, Authority.VENDEDOR],
+    },
     canActivate: [UserRouteAccessService],
   },
   {
@@ -30,6 +35,9 @@ const vendedorRoute: Routes = [
     resolve: {
       vendedor: VendedorRoutingResolveService,
     },
+    data: {
+      authority: [Authority.ADMIN],
+    },
     canActivate: [UserRouteAccessService],
   },
   {
@@ -37,6 +45,9 @@ const vendedorRoute: Routes = [
     component: VendedorUpdateComponent,
     resolve: {
       vendedor: VendedorRoutingResolveService,
+    },
+    data: {
+      authority: [Authority.ADMIN],
     },
     canActivate: [UserRouteAccessService],
   },

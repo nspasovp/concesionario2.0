@@ -1,10 +1,13 @@
 package es.melit.concesionario2.service;
 
 import es.melit.concesionario2.domain.Vendedor;
+import es.melit.concesionario2.repository.UserRepository;
 import es.melit.concesionario2.repository.VendedorRepository;
+import es.melit.concesionario2.service.dto.VendedorDTO;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.autoconfigure.security.SecurityProperties.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -20,9 +23,13 @@ public class VendedorService {
     private final Logger log = LoggerFactory.getLogger(VendedorService.class);
 
     private final VendedorRepository vendedorRepository;
+    private final UserRepository userRepository;
+    private final UserService userService;
 
-    public VendedorService(VendedorRepository vendedorRepository) {
+    public VendedorService(VendedorRepository vendedorRepository, UserRepository userRepository, UserService userService) {
         this.vendedorRepository = vendedorRepository;
+        this.userRepository = userRepository;
+        this.userService = userService;
     }
 
     /**

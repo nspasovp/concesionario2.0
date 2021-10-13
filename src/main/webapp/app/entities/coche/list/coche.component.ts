@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { HttpHeaders, HttpResponse } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
-import { combineLatest } from 'rxjs';
+import { combineLatest, fromEvent, Subscription } from 'rxjs';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 import { ICoche } from '../coche.model';
@@ -10,6 +10,8 @@ import { ASC, DESC, ITEMS_PER_PAGE, SORT } from 'app/config/pagination.constants
 import { CocheService } from '../service/coche.service';
 import { CocheDeleteDialogComponent } from '../delete/coche-delete-dialog.component';
 import { VentaService } from 'app/entities/venta/service/venta.service';
+import { debounceTime, delay, distinctUntilChanged, filter, map, tap } from 'rxjs/operators';
+import { FormControl, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'jhi-coche',
@@ -24,6 +26,8 @@ export class CocheComponent implements OnInit {
   predicate!: string;
   ascending!: boolean;
   ngbPaginationPage = 1;
+  textoDeInput?: string;
+  searchField!: FormControl;
 
   constructor(
     protected ventaService: VentaService,
@@ -42,7 +46,9 @@ export class CocheComponent implements OnInit {
         page: pageToLoad - 1,
         size: this.itemsPerPage,
         sort: this.sort(),
+        ...{ marca: this.textoDeInput },
       })
+      .pipe(delay(1000))
       .subscribe(
         (res: HttpResponse<ICoche[]>) => {
           this.isLoading = false;
@@ -59,7 +65,7 @@ export class CocheComponent implements OnInit {
     this.handleNavigation();
   }
 
-  trackId(index: number, item: ICoche): number {
+  trackId(_index: number, item: ICoche): number {
     return item.id!;
   }
 

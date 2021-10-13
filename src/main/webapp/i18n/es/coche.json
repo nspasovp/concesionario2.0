@@ -6,7 +6,8 @@
         "refreshListLabel": "Refrescar lista",
         "createLabel": "Crear nuevo Coche",
         "createOrEditLabel": "Crear o editar Coche",
-        "notFound": "Ningún Coches encontrado"
+        "notFound": "Ningún Coches encontrado",
+        "buscarCoche": "Buscar Coche"
       },
       "created": "Un nuevo Coche ha sido creado con el identificador {{ param }}",
       "updated": "Un Coche ha sido actualizado con el identificador {{ param }}",
@@ -21,7 +22,8 @@
       "marca": "Marca",
       "modelo": "Modelo",
       "precio": "Precio",
-      "venta": "Venta"
+      "venta": "Venta",
+      "buscarCoche": "Buscar Coche"
     }
   }
 }
