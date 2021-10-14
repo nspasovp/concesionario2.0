@@ -180,7 +180,8 @@ public class VentaResource {
     public ResponseEntity<List<Venta>> getAllVentas(Pageable pageable) {
         log.debug("REST request to get a page of Ventas");
         /*Optional<User> u = userService.getUserWithAuthorities();
-        User user = u.get();*/
+        User user = u.get();
+        VendedorSpec.buscarVentas(user)*/
 
         Page<Venta> page = ventaRepository.findAll(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);

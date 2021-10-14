@@ -21,8 +21,6 @@ public class VendedorSpec {
 
     public static Specification<Venta> buscarVentas(User usuario) {
         Specification<Venta> x = Specification.where(null);
-        //coche.arreglarArray(coche.getMarca());
-
         x = x.and(ventaLike(usuario));
 
         return x;
