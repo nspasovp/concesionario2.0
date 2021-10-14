@@ -5,6 +5,8 @@ import es.melit.concesionario2.domain.Venta;
 import es.melit.concesionario2.repository.CocheRepository;
 import es.melit.concesionario2.repository.VentaRepository;
 import es.melit.concesionario2.service.CocheService;
+import es.melit.concesionario2.service.UserService;
+import es.melit.concesionario2.service.VendedorService;
 import es.melit.concesionario2.service.VentaService;
 import es.melit.concesionario2.web.rest.errors.BadRequestAlertException;
 import java.net.URI;
@@ -50,12 +52,24 @@ public class VentaResource {
 
     private final CocheService cocheService;
 
+    private final VendedorService vendedorService;
+
+    private final UserService userService;
+
     //private final VentaRepository ventaRepository;
 
-    public VentaResource(VentaService ventaService, VentaRepository ventaRepository, CocheService cocheService) {
+    public VentaResource(
+        UserService userService,
+        VendedorService vendedorService,
+        VentaService ventaService,
+        VentaRepository ventaRepository,
+        CocheService cocheService
+    ) {
         this.ventaService = ventaService;
         this.ventaRepository = ventaRepository;
         this.cocheService = cocheService;
+        this.vendedorService = vendedorService;
+        this.userService = userService;
     }
 
     /**
@@ -112,10 +126,7 @@ public class VentaResource {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }*/
 
-        ventaService.actualizarVentaNullCoches(venta);
-        Venta result = ventaService.save(venta);
-        cocheService.cocheVendido(result, cocheId);
-        ventaService.save(result);
+        Venta result = ventaService.editarVenta(venta, cocheId);
 
         return ResponseEntity
             .ok()
@@ -168,7 +179,10 @@ public class VentaResource {
     @GetMapping("/ventas")
     public ResponseEntity<List<Venta>> getAllVentas(Pageable pageable) {
         log.debug("REST request to get a page of Ventas");
-        Page<Venta> page = ventaService.findAll(pageable);
+        /*Optional<User> u = userService.getUserWithAuthorities();
+        User user = u.get();*/
+
+        Page<Venta> page = ventaRepository.findAll(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
@@ -204,8 +218,11 @@ public class VentaResource {
         log.debug("REST request to delete Venta : {}", cocheId);
         //Obtenemos la venta a traves del id
         Optional<Venta> venta = ventaService.findOne(cocheId);
+        Double precio = cocheService.TotalPrecioCochesPorVenta(venta.get());
         //Se borra la venta que tenga un coche asignado
         cocheService.deleteVentaFromCoche(venta.get());
+        Vendedor vendedor = venta.get().getVendedor();
+        vendedor.setComision(vendedor.getComision() - (precio * 0.01));
         //Borra la venta sin coche asignado
         ventaService.delete(cocheId);
         return ResponseEntity

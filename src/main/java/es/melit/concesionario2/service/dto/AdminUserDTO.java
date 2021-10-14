@@ -48,6 +48,8 @@ public class AdminUserDTO {
 
     private Set<String> authorities;
 
+    private String encryptedPassword;
+
     public AdminUserDTO() {
         // Empty constructor needed for Jackson.
     }
@@ -66,6 +68,7 @@ public class AdminUserDTO {
         this.lastModifiedBy = user.getLastModifiedBy();
         this.lastModifiedDate = user.getLastModifiedDate();
         this.authorities = user.getAuthorities().stream().map(Authority::getName).collect(Collectors.toSet());
+        this.encryptedPassword = user.getPassword();
     }
 
     public Long getId() {
@@ -170,6 +173,14 @@ public class AdminUserDTO {
 
     public void setAuthorities(Set<String> authorities) {
         this.authorities = authorities;
+    }
+
+    public String getEncryptedPassword() {
+        return encryptedPassword;
+    }
+
+    public void setEncryptedPassword(String encryptedPassword) {
+        this.encryptedPassword = encryptedPassword;
     }
 
     // prettier-ignore

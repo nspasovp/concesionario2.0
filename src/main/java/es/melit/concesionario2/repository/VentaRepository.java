@@ -10,4 +10,4 @@ import org.springframework.stereotype.Repository;
  */
 @SuppressWarnings("unused")
 @Repository
-public interface VentaRepository extends JpaRepository<Venta, Long> {}
+public interface VentaRepository extends JpaRepository<Venta, Long>, JpaSpecificationExecutor<Venta> {}

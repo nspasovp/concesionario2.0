@@ -168,6 +168,10 @@ public class Vendedor implements Serializable {
         this.comision = comision;
     }
 
+    public void setComisionCero() {
+        this.comision = 0.0;
+    }
+
     public User getIdUser() {
         return user;
     }

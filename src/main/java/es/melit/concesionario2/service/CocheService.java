@@ -80,9 +80,9 @@ public class CocheService {
      *
      */
     public void cocheVendido(Venta venta, String cochesId) throws JSONException {
-        ArrayList<Long> miarray = jsonStringToArray(cochesId);
-        for (int i = 0; i < miarray.size(); i++) {
-            Optional<Coche> c = findOne(miarray.get(i));
+        ArrayList<Long> idCoches = jsonStringToArray(cochesId);
+        for (int i = 0; i < idCoches.size(); i++) {
+            Optional<Coche> c = findOne(idCoches.get(i));
             c.get().setVenta(venta);
             save(c.get());
         }

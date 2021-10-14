@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.configurationprocessor.json.JSONException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -29,17 +30,20 @@ public class VentaService {
     private final VendedorRepository vendedorRepository;
     private final CocheService cocheService;
     private final CocheRepository cocheRepository;
+    private final VendedorService vendedorService;
 
     public VentaService(
         VentaRepository ventaRepository,
         CocheService cocheService,
         VendedorRepository vendedorRepository,
-        CocheRepository cocheRepository
+        CocheRepository cocheRepository,
+        VendedorService vendedorService
     ) {
         this.ventaRepository = ventaRepository;
         this.cocheService = cocheService;
         this.vendedorRepository = vendedorRepository;
         this.cocheRepository = cocheRepository;
+        this.vendedorService = vendedorService;
     }
 
     /**
@@ -125,10 +129,10 @@ public class VentaService {
         log.debug("Calculate comision", venta);
         Vendedor vendedor = venta.getVendedor();
         if (vendedor.getComision() == null) {
-            vendedor.setComision(0.0);
+            vendedor.setComisionCero();
         }
         Double totalPrecio = cocheService.TotalPrecioCochesPorVenta(venta);
-        vendedor.setComision(vendedor.getComision() + (0.10 * totalPrecio));
+        vendedor.setComision(vendedor.getComision() + (0.01 * totalPrecio));
         vendedorRepository.save(vendedor);
     }
 
@@ -139,5 +143,18 @@ public class VentaService {
                 coches.get(i).setVentaToNull();
             }
         }
+    }
+
+    public Venta editarVenta(Venta venta, String cocheId) throws JSONException {
+        this.actualizarVentaNullCoches(venta);
+        Venta result = this.save(venta);
+        Vendedor vendedor = venta.getVendedor();
+        vendedor.setComisionCero();
+        vendedorService.save(vendedor);
+        cocheService.cocheVendido(result, cocheId);
+        this.calculateComision(venta);
+        this.save(result);
+
+        return result;
     }
 }

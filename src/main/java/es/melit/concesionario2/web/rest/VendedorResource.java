@@ -1,25 +1,14 @@
 package es.melit.concesionario2.web.rest;
 
-import es.melit.concesionario2.domain.Authority;
-import es.melit.concesionario2.domain.User;
 import es.melit.concesionario2.domain.Vendedor;
-import es.melit.concesionario2.repository.UserRepository;
 import es.melit.concesionario2.repository.VendedorRepository;
-import es.melit.concesionario2.security.AuthoritiesConstants;
-import es.melit.concesionario2.service.UserService;
 import es.melit.concesionario2.service.VendedorService;
-import es.melit.concesionario2.service.dto.AdminUserDTO;
-import es.melit.concesionario2.service.dto.PasswordChangeDTO;
-import es.melit.concesionario2.service.dto.VendedorDTO;
 import es.melit.concesionario2.web.rest.errors.BadRequestAlertException;
-import es.melit.concesionario2.web.rest.vm.KeyAndPasswordVM;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.Set;
-import java.util.TreeSet;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import org.slf4j.Logger;
@@ -28,8 +17,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import tech.jhipster.web.util.HeaderUtil;
@@ -50,25 +39,16 @@ public class VendedorResource {
     @Value("${jhipster.clientApp.name}")
     private String applicationName;
 
+    private final PasswordEncoder passwordEncoder;
+
     private final VendedorService vendedorService;
-    private final UserService userService;
-    private final UserRepository userRepository;
-    private final UserResource userResource;
 
     private final VendedorRepository vendedorRepository;
 
-    public VendedorResource(
-        UserResource userResource,
-        VendedorService vendedorService,
-        VendedorRepository vendedorRepository,
-        UserService userService,
-        UserRepository userRepository
-    ) {
+    public VendedorResource(PasswordEncoder passwordEncoder, VendedorService vendedorService, VendedorRepository vendedorRepository) {
+        this.passwordEncoder = passwordEncoder;
         this.vendedorService = vendedorService;
         this.vendedorRepository = vendedorRepository;
-        this.userService = userService;
-        this.userRepository = userRepository;
-        this.userResource = userResource;
     }
 
     /**
@@ -85,18 +65,7 @@ public class VendedorResource {
             throw new BadRequestAlertException("A new vendedor cannot already have an ID", ENTITY_NAME, "idexists");
         }
 
-        User u = new User();
-        u.setLogin(vendedor.getNombre());
-        AdminUserDTO usuario = new AdminUserDTO(u);
-        Set<String> authorities = new TreeSet();
-        String rol = AuthoritiesConstants.VENDEDOR;
-        authorities.add(rol);
-        usuario.setAuthorities(authorities);
-        User user = userService.createUser(usuario);
-        user.setPassword(vendedor.getNombre().toLowerCase());
-        Optional<User> x = userRepository.findById(user.getId());
-        vendedor.setIdUser(x.get());
-
+        vendedorService.crearVendedorUsuario(vendedor, this.passwordEncoder);
         Vendedor result = vendedorService.save(vendedor);
 
         return ResponseEntity

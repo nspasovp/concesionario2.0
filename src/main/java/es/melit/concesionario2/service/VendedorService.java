@@ -1,15 +1,21 @@
 package es.melit.concesionario2.service;
 
+import es.melit.concesionario2.domain.*;
 import es.melit.concesionario2.domain.Vendedor;
 import es.melit.concesionario2.repository.UserRepository;
 import es.melit.concesionario2.repository.VendedorRepository;
+import es.melit.concesionario2.security.AuthoritiesConstants;
+import es.melit.concesionario2.service.dto.AdminUserDTO;
 import es.melit.concesionario2.service.dto.VendedorDTO;
 import java.util.Optional;
+import java.util.Set;
+import java.util.TreeSet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.autoconfigure.security.SecurityProperties.User;
+//import org.springframework.boot.autoconfigure.security.SecurityProperties.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -116,5 +122,27 @@ public class VendedorService {
     public void delete(Long id) {
         log.debug("Request to delete Vendedor : {}", id);
         vendedorRepository.deleteById(id);
+    }
+
+    public Vendedor crearVendedorUsuario(Vendedor vendedor, PasswordEncoder passwordEncoder) {
+        User u = new User();
+        u.setLogin(vendedor.getNombre());
+        AdminUserDTO usuario = new AdminUserDTO(u);
+
+        //Añadir el rol al usuario creado
+        Set<String> authorities = new TreeSet();
+        String rol = AuthoritiesConstants.VENDEDOR;
+        authorities.add(rol);
+        usuario.setAuthorities(authorities);
+        User user = userService.createUser(usuario);
+
+        //Asigna como contraseña el nombre del login
+        String encryptedPassword = passwordEncoder.encode(usuario.getLogin());
+        user.setPassword(encryptedPassword);
+        userRepository.save(user);
+        Optional<User> x = userRepository.findById(user.getId());
+        vendedor.setIdUser(x.get());
+
+        return vendedor;
     }
 }

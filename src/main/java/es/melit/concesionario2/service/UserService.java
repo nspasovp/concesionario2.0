@@ -3,10 +3,12 @@ package es.melit.concesionario2.service;
 import es.melit.concesionario2.config.Constants;
 import es.melit.concesionario2.domain.Authority;
 import es.melit.concesionario2.domain.User;
+import es.melit.concesionario2.domain.Vendedor;
 import es.melit.concesionario2.repository.AuthorityRepository;
 import es.melit.concesionario2.repository.CompradorRepository;
 import es.melit.concesionario2.repository.UserRepository;
 import es.melit.concesionario2.repository.VendedorRepository;
+import es.melit.concesionario2.repository.VentaRepository;
 import es.melit.concesionario2.security.AuthoritiesConstants;
 import es.melit.concesionario2.security.SecurityUtils;
 import es.melit.concesionario2.service.dto.AdminUserDTO;
@@ -21,6 +23,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.cache.CacheManager;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -182,6 +185,7 @@ public class UserService {
         }
         String encryptedPassword = passwordEncoder.encode(RandomUtil.generatePassword());
         user.setPassword(encryptedPassword);
+
         user.setResetKey(RandomUtil.generateResetKey());
         user.setResetDate(Instant.now());
         user.setActivated(true);
@@ -269,12 +273,18 @@ public class UserService {
     }
 
     public void deleteUser(String login) {
+        Optional<User> u = userRepository.findOneByLogin(login);
+        User us = u.get();
+        Long id = u.get().getId();
+        List<Vendedor> v = vendedorRepository.obtenerVendedorIdUser(id);
         userRepository
             .findOneByLogin(login)
             .ifPresent(
                 user -> {
+                    vendedorRepository.delete(v.get(0));
                     userRepository.delete(user);
                     this.clearUserCaches(user);
+
                     log.debug("Deleted User: {}", user);
                 }
             );
