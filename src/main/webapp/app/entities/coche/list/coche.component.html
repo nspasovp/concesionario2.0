@@ -3,7 +3,7 @@
     <span jhiTranslate="concesionario2App.coche.home.title">Coches</span>
 
     <div class="d-flex justify-content-end">
-      <input [(ngModel)]="textoDeInput" id="input" type="text" name="buscarCoche" (ngModelChange)="loadPage()" />
+      <input [(ngModel)]="textoDeInput" id="input" type="text" name="buscarCoche" (ngModelChange)="this.cocheCriteria.next($event)" />
       <!-- <button class="btn btn-info mr-2" (click)="loadPage()" [disabled]="isLoading">
         <fa-icon icon="sync" [spin]="isLoading"></fa-icon>
         <span jhiTranslate="concesionario2App.coche.home.refreshListLabel">Refresh List</span>

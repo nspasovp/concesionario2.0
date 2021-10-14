@@ -1,7 +1,7 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { HttpHeaders, HttpResponse } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
-import { combineLatest, fromEvent, Subscription } from 'rxjs';
+import { combineLatest, fromEvent, Subject, Subscription } from 'rxjs';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 import { ICoche } from '../coche.model';
@@ -27,7 +27,7 @@ export class CocheComponent implements OnInit {
   ascending!: boolean;
   ngbPaginationPage = 1;
   textoDeInput?: string;
-  searchField!: FormControl;
+  cocheCriteria = new Subject<string>();
 
   constructor(
     protected ventaService: VentaService,
@@ -48,7 +48,6 @@ export class CocheComponent implements OnInit {
         sort: this.sort(),
         ...{ marca: this.textoDeInput },
       })
-      .pipe(delay(1000))
       .subscribe(
         (res: HttpResponse<ICoche[]>) => {
           this.isLoading = false;
@@ -63,6 +62,9 @@ export class CocheComponent implements OnInit {
 
   ngOnInit(): void {
     this.handleNavigation();
+    this.cocheCriteria.pipe(debounceTime(1000), distinctUntilChanged()).subscribe(() => {
+      this.loadPage();
+    });
   }
 
   trackId(_index: number, item: ICoche): number {
