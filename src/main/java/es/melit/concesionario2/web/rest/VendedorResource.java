@@ -1,7 +1,10 @@
 package es.melit.concesionario2.web.rest;
 
+import es.melit.concesionario2.domain.User;
 import es.melit.concesionario2.domain.Vendedor;
+import es.melit.concesionario2.repository.UserRepository;
 import es.melit.concesionario2.repository.VendedorRepository;
+import es.melit.concesionario2.service.UserService;
 import es.melit.concesionario2.service.VendedorService;
 import es.melit.concesionario2.web.rest.errors.BadRequestAlertException;
 import java.net.URI;
@@ -45,10 +48,18 @@ public class VendedorResource {
 
     private final VendedorRepository vendedorRepository;
 
-    public VendedorResource(PasswordEncoder passwordEncoder, VendedorService vendedorService, VendedorRepository vendedorRepository) {
+    private final UserService userService;
+
+    public VendedorResource(
+        UserService userService,
+        PasswordEncoder passwordEncoder,
+        VendedorService vendedorService,
+        VendedorRepository vendedorRepository
+    ) {
         this.passwordEncoder = passwordEncoder;
         this.vendedorService = vendedorService;
         this.vendedorRepository = vendedorRepository;
+        this.userService = userService;
     }
 
     /**
@@ -64,7 +75,6 @@ public class VendedorResource {
         if (vendedor.getId() != null) {
             throw new BadRequestAlertException("A new vendedor cannot already have an ID", ENTITY_NAME, "idexists");
         }
-
         vendedorService.crearVendedorUsuario(vendedor, this.passwordEncoder);
         Vendedor result = vendedorService.save(vendedor);
 
@@ -153,6 +163,7 @@ public class VendedorResource {
     public ResponseEntity<List<Vendedor>> getAllVendedors(Pageable pageable) {
         log.debug("REST request to get a page of Vendedors");
         Page<Vendedor> page = vendedorService.findAll(pageable);
+        //Page<User> page = userService.getUserAuthorityLike(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }

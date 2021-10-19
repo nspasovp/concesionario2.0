@@ -20,8 +20,10 @@ import java.util.*;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.support.PagedListHolder;
 import org.springframework.cache.CacheManager;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -274,14 +276,15 @@ public class UserService {
 
     public void deleteUser(String login) {
         Optional<User> u = userRepository.findOneByLogin(login);
-        User us = u.get();
         Long id = u.get().getId();
         List<Vendedor> v = vendedorRepository.obtenerVendedorIdUser(id);
         userRepository
             .findOneByLogin(login)
             .ifPresent(
                 user -> {
-                    vendedorRepository.delete(v.get(0));
+                    if (v.size() != 0) {
+                        vendedorRepository.delete(v.get(0));
+                    }
                     userRepository.delete(user);
                     this.clearUserCaches(user);
 
@@ -389,5 +392,20 @@ public class UserService {
         if (user.getEmail() != null) {
             Objects.requireNonNull(cacheManager.getCache(UserRepository.USERS_BY_EMAIL_CACHE)).evict(user.getEmail());
         }
+    }
+
+    public Page<User> getUserAuthorityLike(Pageable pageable) {
+        List<User> users = userRepository.findAll();
+        List<User> u = new ArrayList<User>();
+
+        for (int i = 0; i < users.size(); i++) {
+            Set<Authority> authorities = users.get(i).getAuthorities();
+            if (authorities.toString() == "ROLE_VENDEDOR") {
+                u.add(users.get(i));
+            }
+        }
+
+        Page<User> page = new PageImpl<>(u);
+        return page;
     }
 }

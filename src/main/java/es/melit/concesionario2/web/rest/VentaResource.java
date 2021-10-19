@@ -56,6 +56,8 @@ public class VentaResource {
 
     private final UserService userService;
 
+    private final CocheRepository cocheRepository;
+
     //private final VentaRepository ventaRepository;
 
     public VentaResource(
@@ -63,13 +65,15 @@ public class VentaResource {
         VendedorService vendedorService,
         VentaService ventaService,
         VentaRepository ventaRepository,
-        CocheService cocheService
+        CocheService cocheService,
+        CocheRepository cocheRepository
     ) {
         this.ventaService = ventaService;
         this.ventaRepository = ventaRepository;
         this.cocheService = cocheService;
         this.vendedorService = vendedorService;
         this.userService = userService;
+        this.cocheRepository = cocheRepository;
     }
 
     /**
@@ -219,12 +223,15 @@ public class VentaResource {
         log.debug("REST request to delete Venta : {}", cocheId);
         //Obtenemos la venta a traves del id
         Optional<Venta> venta = ventaService.findOne(cocheId);
+        List<Coche> c = cocheRepository.obtenerCochesIdVenta(venta.get().getId());
         Double precio = cocheService.TotalPrecioCochesPorVenta(venta.get());
-        //Se borra la venta que tenga un coche asignado
-        cocheService.deleteVentaFromCoche(venta.get());
-        Vendedor vendedor = venta.get().getVendedor();
-        vendedor.setComision(vendedor.getComision() - (precio * 0.01));
-        //Borra la venta sin coche asignado
+        if (c.size() == 1) {
+            //Se borra la venta que tenga un coche asignado
+            cocheService.deleteVentaFromCoche(venta.get());
+            Vendedor vendedor = venta.get().getVendedor();
+            vendedor.setComision(vendedor.getComision() - (precio * 0.01));
+        }
+        //Borra la venta con varios coches asignados
         ventaService.delete(cocheId);
         return ResponseEntity
             .noContent()

@@ -4,15 +4,16 @@ import es.melit.concesionario2.domain.*;
 import es.melit.concesionario2.domain.Vendedor;
 import es.melit.concesionario2.repository.UserRepository;
 import es.melit.concesionario2.repository.VendedorRepository;
+import es.melit.concesionario2.repository.VentaRepository;
 import es.melit.concesionario2.security.AuthoritiesConstants;
 import es.melit.concesionario2.service.dto.AdminUserDTO;
 import es.melit.concesionario2.service.dto.VendedorDTO;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-//import org.springframework.boot.autoconfigure.security.SecurityProperties.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -31,11 +32,18 @@ public class VendedorService {
     private final VendedorRepository vendedorRepository;
     private final UserRepository userRepository;
     private final UserService userService;
+    private final VentaRepository ventaRepository;
 
-    public VendedorService(VendedorRepository vendedorRepository, UserRepository userRepository, UserService userService) {
+    public VendedorService(
+        VentaRepository ventaRepository,
+        VendedorRepository vendedorRepository,
+        UserRepository userRepository,
+        UserService userService
+    ) {
         this.vendedorRepository = vendedorRepository;
         this.userRepository = userRepository;
         this.userService = userService;
+        this.ventaRepository = ventaRepository;
     }
 
     /**
@@ -121,6 +129,10 @@ public class VendedorService {
      */
     public void delete(Long id) {
         log.debug("Request to delete Vendedor : {}", id);
+        Optional<Vendedor> v = vendedorRepository.findById(id);
+        Optional<User> u = userRepository.findById(v.get().getIdUser().getId());
+        User user = u.get();
+        userRepository.delete(user);
         vendedorRepository.deleteById(id);
     }
 

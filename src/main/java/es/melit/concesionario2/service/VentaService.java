@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.configurationprocessor.json.JSONException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.repository.query.QueryByExampleExecutor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -117,7 +118,14 @@ public class VentaService {
      */
     public void delete(Long id) {
         log.debug("Request to delete Venta : {}", id);
+        Optional<Venta> venta = this.findOne(id);
+        List<Coche> c = cocheRepository.obtenerCochesIdVenta(venta.get().getId());
+        for (int i = 0; i < c.size(); i++) {
+            c.get(i).setVentaToNull();
+        }
         ventaRepository.deleteById(id);
+        Vendedor vendedor = venta.get().getVendedor();
+        vendedor.setComision(cocheService.TotalPrecioCochesPorVenta(venta.get()));
     }
 
     /**

@@ -26,8 +26,9 @@ public class CocheSpec {
     public static Specification<Coche> buscarCoches(CocheCriteria coche) {
         Specification<Coche> x = Specification.where(null);
         //coche.arreglarArray(coche.getMarca());
+
         if (coche.getLong() >= 1) {
-            if (coche.getArray(0) != null) {
+            if (coche.getArray(0) != "") {
                 x = x.and(marcaLike(coche.getArray(0)).or(modeloLike(coche.getArray(0))));
                 //.or(precioLike(coche.getArray(0))));
             }

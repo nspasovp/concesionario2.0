@@ -6,6 +6,7 @@ import es.melit.concesionario2.repository.UserRepository;
 import es.melit.concesionario2.security.AuthoritiesConstants;
 import es.melit.concesionario2.service.MailService;
 import es.melit.concesionario2.service.UserService;
+import es.melit.concesionario2.service.VendedorService;
 import es.melit.concesionario2.service.dto.AdminUserDTO;
 import es.melit.concesionario2.web.rest.errors.BadRequestAlertException;
 import es.melit.concesionario2.web.rest.errors.EmailAlreadyUsedException;
@@ -87,10 +88,13 @@ public class UserResource {
 
     private final MailService mailService;
 
-    public UserResource(UserService userService, UserRepository userRepository, MailService mailService) {
+    private final VendedorService vendedorService;
+
+    public UserResource(VendedorService vendedorService, UserService userService, UserRepository userRepository, MailService mailService) {
         this.userService = userService;
         this.userRepository = userRepository;
         this.mailService = mailService;
+        this.vendedorService = vendedorService;
     }
 
     /**
@@ -119,6 +123,7 @@ public class UserResource {
             throw new EmailAlreadyUsedException();
         } else {
             User newUser = userService.createUser(userDTO);
+
             mailService.sendCreationEmail(newUser);
             return ResponseEntity
                 .created(new URI("/api/admin/users/" + newUser.getLogin()))

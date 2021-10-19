@@ -185,7 +185,7 @@ public class CocheService {
      * @return the StringArray<Long>.
      */
     public int numeroCochesPorVenta(Long id) {
-        List<Coche> num = cocheRepository.obtenerNumCochesIdVenta(id);
+        List<Coche> num = cocheRepository.obtenerCochesIdVenta(id);
         return num.size();
     }
 
