@@ -55,6 +55,9 @@ public class Vendedor implements Serializable {
     @JoinColumn(name = "id_user")
     private User user;
 
+    /*@Column(name = "num_ventas_mes_actual")
+    private int numTotalCochesVendidosMesActual=0;*/
+
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
         return id;
@@ -179,6 +182,14 @@ public class Vendedor implements Serializable {
     public void setIdUser(User idUser) {
         this.user = idUser;
     }
+
+    /*public int getNumTotalCochesVendidosMesActual() {
+        return numTotalCochesVendidosMesActual;
+    }
+
+    public void setNumTotalCochesVendidosMesActual(int numTotalCochesVendidosMesActual) {
+        this.numTotalCochesVendidosMesActual = numTotalCochesVendidosMesActual;
+    }*/
 
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 

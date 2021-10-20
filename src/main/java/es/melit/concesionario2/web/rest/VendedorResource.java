@@ -162,8 +162,7 @@ public class VendedorResource {
     @GetMapping("/vendedors")
     public ResponseEntity<List<Vendedor>> getAllVendedors(Pageable pageable) {
         log.debug("REST request to get a page of Vendedors");
-        Page<Vendedor> page = vendedorService.findAll(pageable);
-        //Page<User> page = userService.getUserAuthorityLike(pageable);
+        Page<Vendedor> page = vendedorService.findAllByLogin(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }

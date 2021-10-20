@@ -2,6 +2,9 @@ package es.melit.concesionario2.domain;
 
 import com.fasterxml.jackson.databind.introspect.TypeResolutionContext.Empty;
 import es.melit.concesionario2.service.CocheCriteria;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
@@ -25,4 +28,6 @@ public class VendedorSpec {
 
         return x;
     }
+
+    DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
 }

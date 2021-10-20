@@ -90,7 +90,7 @@
               </button>
 
               <button
-                *jhiHasAnyAuthority="['ROLE_ADMIN']"
+                *jhiHasAnyAuthority="['ROLE_ADMIN', 'ROLE_VENDEDOR']"
                 type="submit"
                 [routerLink]="['/venta', venta.id, 'edit']"
                 class="btn btn-primary btn-sm"

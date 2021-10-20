@@ -2,6 +2,8 @@ package es.melit.concesionario2.service;
 
 import es.melit.concesionario2.domain.*;
 import es.melit.concesionario2.repository.*;
+import java.time.LocalDate;
+import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -178,15 +180,41 @@ public class CocheService {
     }
 
     /**
-     * Get JSON String to ArrayList<Long>.
+     * Get number of coche with the same venta.
      *
-     * @param String the JSON to convert.
+     * @param Long Ventas id.
      *
-     * @return the StringArray<Long>.
+     * @return int number of coches.
      */
     public int numeroCochesPorVenta(Long id) {
         List<Coche> num = cocheRepository.obtenerCochesIdVenta(id);
         return num.size();
+    }
+
+    /**
+     * Get number of coche with the same venta in actual month.
+     *
+     * @param Long Ventas id.
+     *
+     * @return int number of coches.
+     */
+    public int numeroCochesPorVentaMesActual(Venta venta) {
+        LocalDate start = LocalDate.now().with(TemporalAdjusters.firstDayOfMonth());
+        LocalDate end = LocalDate.now().plusMonths(1).with(TemporalAdjusters.lastDayOfMonth());
+        List<Venta> ventasVendedor = ventaRepository.obtenerVentasByNameVendedor(venta.getVendedor().getNombre());
+        List<Venta> v = new ArrayList<Venta>();
+        for (int i = 0; i < ventasVendedor.size(); i++) {
+            if (ventasVendedor.get(i).getFecha().isAfter(start) && ventasVendedor.get(i).getFecha().isBefore(end)) {
+                v.add(ventasVendedor.get(i));
+            }
+        }
+        int total = 0;
+        for (int i = 0; i < v.size(); i++) {
+            total += this.numeroCochesPorVenta(v.get(i).getId());
+        }
+
+        //venta.getVendedor().setNumTotalCochesVendidosMesActual(total);
+        return total;
     }
 
     public Double TotalPrecioCochesPorVenta(Venta venta) {
@@ -195,6 +223,25 @@ public class CocheService {
         for (int i = 0; i < coches.size(); i++) {
             total += coches.get(i).getPrecio();
         }
+        return total;
+    }
+
+    public Double TotalPrecioCochesPorVentaMesActual(Venta venta) {
+        LocalDate start = LocalDate.now().with(TemporalAdjusters.firstDayOfMonth());
+        LocalDate end = LocalDate.now().plusMonths(1).with(TemporalAdjusters.lastDayOfMonth());
+
+        List<Venta> ventasVendedor = ventaRepository.obtenerVentasByNameVendedor(venta.getVendedor().getNombre());
+        List<Venta> v = new ArrayList<Venta>();
+        for (int i = 0; i < ventasVendedor.size(); i++) {
+            if (ventasVendedor.get(i).getFecha().isAfter(start) && ventasVendedor.get(i).getFecha().isBefore(end)) {
+                v.add(ventasVendedor.get(i));
+            }
+        }
+        Double total = 0.0;
+        for (int i = 0; i < v.size(); i++) {
+            total += this.TotalPrecioCochesPorVenta(v.get(i));
+        }
+
         return total;
     }
 }

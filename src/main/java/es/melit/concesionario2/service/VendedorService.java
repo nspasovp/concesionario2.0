@@ -15,6 +15,7 @@ import java.util.TreeSet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -108,6 +109,24 @@ public class VendedorService {
     public Page<Vendedor> findAll(Pageable pageable) {
         log.debug("Request to get all Vendedors");
         return vendedorRepository.findAll(pageable);
+    }
+
+    /**
+     * Get all the vendedors by login.
+     *
+     * @param pageable the pagination information.
+     * @return the list of entities.
+     */
+    @Transactional(readOnly = true)
+    public Page<Vendedor> findAllByLogin(Pageable pageable) {
+        log.debug("Request to get all Vendedors");
+        Optional<User> u = userService.getUserWithAuthorities();
+        if (u.get().getLogin().equals("admin")) {
+            return this.findAll(pageable);
+        }
+        List<Vendedor> pageL = vendedorRepository.obtenerVendedorIdUser(u.get().getId());
+        Page<Vendedor> page = new PageImpl<>(pageL);
+        return page;
     }
 
     /**

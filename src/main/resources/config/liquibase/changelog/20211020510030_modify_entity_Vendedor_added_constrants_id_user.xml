@@ -9,13 +9,15 @@
     <!--
         Added the entity Comprador.
     -->
-    <!--<changeSet id="202110205100100" author="melit">
-        <addColumn tableName="vendedor">
-            <column name="id_user" type="bigint">
-                <constraints nullable="false"/>
-            </column>
-        </addColumn>
-    </changeSet>-->
+    <changeSet id="20211020510030" author="melit">
+
+        <addForeignKeyConstraint baseColumnNames="id_user"
+                                 baseTableName="vendedor"
+                                 constraintName="fk_vendedor__id_user"
+                                 referencedColumnNames="id"
+                                 referencedTableName="jhi_user"/>
+
+    </changeSet>
 
     <!-- jhipster-needle-liquibase-add-changeset - JHipster will add changesets here -->
 

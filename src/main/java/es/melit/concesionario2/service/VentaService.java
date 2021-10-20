@@ -1,20 +1,22 @@
 package es.melit.concesionario2.service;
 
 import es.melit.concesionario2.domain.Coche;
+import es.melit.concesionario2.domain.User;
 import es.melit.concesionario2.domain.Vendedor;
 import es.melit.concesionario2.domain.Venta;
 import es.melit.concesionario2.repository.CocheRepository;
 import es.melit.concesionario2.repository.VendedorRepository;
 import es.melit.concesionario2.repository.VentaRepository;
-import es.melit.concesionario2.service.*;
+import java.time.LocalDate;
+import java.time.temporal.TemporalAdjusters;
 import java.util.List;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.configurationprocessor.json.JSONException;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.repository.query.QueryByExampleExecutor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,19 +34,22 @@ public class VentaService {
     private final CocheService cocheService;
     private final CocheRepository cocheRepository;
     private final VendedorService vendedorService;
+    private final UserService userService;
 
     public VentaService(
         VentaRepository ventaRepository,
         CocheService cocheService,
         VendedorRepository vendedorRepository,
         CocheRepository cocheRepository,
-        VendedorService vendedorService
+        VendedorService vendedorService,
+        UserService userService
     ) {
         this.ventaRepository = ventaRepository;
         this.cocheService = cocheService;
         this.vendedorRepository = vendedorRepository;
         this.cocheRepository = cocheRepository;
         this.vendedorService = vendedorService;
+        this.userService = userService;
     }
 
     /**
@@ -100,6 +105,24 @@ public class VentaService {
     }
 
     /**
+     * Get all the ventas by idVendedor.
+     *
+     * @param pageable the pagination information.
+     * @return the list of entities.
+     */
+    @Transactional(readOnly = true)
+    public Page<Venta> findAllByIdVendedor(Pageable pageable) {
+        log.debug("Request to get all Ventas");
+        Optional<User> u = userService.getUserWithAuthorities();
+        if (u.get().getLogin().equals("admin")) {
+            return this.findAll(pageable);
+        }
+        List<Venta> pageL = ventaRepository.obtenerVentasByNameVendedor(u.get().getLogin());
+        Page<Venta> page = new PageImpl<>(pageL);
+        return page;
+    }
+
+    /**
      * Get one venta by id.
      *
      * @param id the id of the entity.
@@ -129,7 +152,7 @@ public class VentaService {
     }
 
     /**
-     * Calculate comision for vendedor  by venta.
+     * Calculate comision for vendedor  by venta in actual month.
      *
      * @param venta the Venta entity.
      */
@@ -139,7 +162,7 @@ public class VentaService {
         if (vendedor.getComision() == null) {
             vendedor.setComisionCero();
         }
-        Double totalPrecio = cocheService.TotalPrecioCochesPorVenta(venta);
+        Double totalPrecio = cocheService.TotalPrecioCochesPorVentaMesActual(venta);
         vendedor.setComision(vendedor.getComision() + (0.01 * totalPrecio));
         vendedorRepository.save(vendedor);
     }

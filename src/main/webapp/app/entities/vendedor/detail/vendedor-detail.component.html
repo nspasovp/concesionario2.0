@@ -42,10 +42,14 @@
         <dd>
           <span>{{ vendedor.fechaBaja | formatMediumDate }}</span>
         </dd>
-        <dt *jhiHasAnyAuthority="['ROLE_ADMIN']"><span jhiTranslate="concesionario2App.vendedor.comision">Comision</span></dt>
-        <dd *jhiHasAnyAuthority="['ROLE_ADMIN']">
+        <dt *jhiHasAnyAuthority="['ROLE_ADMIN', 'ROLE_VENDEDOR']">
+          <span jhiTranslate="concesionario2App.vendedor.comision">Comision</span>
+        </dt>
+        <dd *jhiHasAnyAuthority="['ROLE_ADMIN', 'ROLE_VENDEDOR']">
           <span>{{ vendedor.comision }} €</span>
         </dd>
+        <dt *jhiHasAnyAuthority="['ROLE_ADMIN', 'ROLE_VENDEDOR']"><span>Total coches Vendidos mes actual</span></dt>
+        <dd *jhiHasAnyAuthority="['ROLE_ADMIN', 'ROLE_VENDEDOR']"></dd>
       </dl>
 
       <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">

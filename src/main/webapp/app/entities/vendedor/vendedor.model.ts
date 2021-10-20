@@ -10,6 +10,7 @@ export interface IVendedor {
   fechaContratacion?: dayjs.Dayjs;
   fechaBaja?: dayjs.Dayjs | null;
   comision?: number | null;
+  //numCochesVendidosMesActual?: number | null;
 }
 
 export class Vendedor implements IVendedor {
@@ -23,7 +24,8 @@ export class Vendedor implements IVendedor {
     public fechaContratacion?: dayjs.Dayjs,
     public fechaBaja?: dayjs.Dayjs | null,
     public comision?: number | null
-  ) {}
+  ) //public numCochesVendidosMesActual?: number | null
+  {}
 }
 
 export function getVendedorIdentifier(vendedor: IVendedor): number | undefined {

@@ -24,8 +24,8 @@
     <include file="config/liquibase/changelog/20210922090332_added_entity_constraints_Venta.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20210922134500_modify_entity_Venta_added_column_numFactura.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20210929140000_modify_entity_Vendedor_added_column_comision.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/202110205100100_modify_entity_Vendedor_added_column_idUser.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/202110205100300_modify_entity_Vendedor_added_constrants_id_user.xml" relativeToChangelogFile="false"/>
+    <!-- <include file="config/liquibase/changelog/20211020510010_modify_entity_Vendedor_added_column_idUser.xml" relativeToChangelogFile="false"/>-->
+    <include file="config/liquibase/changelog/20211020510030_modify_entity_Vendedor_added_constrants_id_user.xml" relativeToChangelogFile="false"/>
     <!-- jhipster-needle-liquibase-add-constraints-changelog - JHipster will add liquibase constraints changelogs here -->
     <!-- jhipster-needle-liquibase-add-incremental-changelog - JHipster will add incremental liquibase changelogs here -->
 </databaseChangeLog>

@@ -22,6 +22,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.configurationprocessor.json.JSONException;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -183,11 +184,7 @@ public class VentaResource {
     @GetMapping("/ventas")
     public ResponseEntity<List<Venta>> getAllVentas(Pageable pageable) {
         log.debug("REST request to get a page of Ventas");
-        /*Optional<User> u = userService.getUserWithAuthorities();
-        User user = u.get();
-        VendedorSpec.buscarVentas(user)*/
-
-        Page<Venta> page = ventaRepository.findAll(pageable);
+        Page<Venta> page = ventaService.findAllByIdVendedor(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
